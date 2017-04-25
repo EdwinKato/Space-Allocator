@@ -3,7 +3,7 @@
 A simple python command line application to manage and allocate office and living space to new people joining the
 Dojo
 
-##Features
+## Features
 * Creation of new rooms
 * Adding a new person
 * Prints all the people in a room
@@ -14,5 +14,5 @@ Dojo
 * Persists all the data stored in the app to an sqlite database
 * Loads data from an sqlite database into the app
 
-##Dependencies
+## Dependencies
 * docopt *Version 0.6.2*
