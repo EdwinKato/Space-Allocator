@@ -4,7 +4,7 @@ class Dojo(object):
         self.all_rooms = []
         self.all_people = []
 
-
-
+    def create_room(self, room_type, room_name):
+        pass
 
 
