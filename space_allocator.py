@@ -30,7 +30,11 @@ Options:
 
 """
 from docopt import docopt
+from src.dojo import Dojo
 
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__, version='Space allocator 1.0')
+    # arguments = docopt(__doc__, version='Space allocator 1.0')
+    dojo = Dojo()
+    dojo.create_room("office", "blue")
+    print(dojo)
