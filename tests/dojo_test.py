@@ -3,6 +3,12 @@ from src.dojo import Dojo
 
 
 class TestCreateRoom (unittest.TestCase):
+
+    def setUp(self):
+        self.dojo = Dojo()
+        self.test_office = self.dojo.create_room("office", "test")
+        self.test_living_space = self.dojo.create_room("living_space", "test living space")
+        
     def test_create_room_successfully(self):
         my_class_instance = Dojo()
         initial_room_count = len(my_class_instance.all_rooms)
