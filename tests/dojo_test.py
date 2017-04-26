@@ -111,3 +111,13 @@ class TestCreateRoom (unittest.TestCase):
         target_room = self.dojo.find_room("orange")
         person = self.dojo.find_person(1)
         self.assertIn(person, target_room.residents)
+
+    def test_persists_data(self):
+        dojo1 = Dojo()
+        dojo1.create_room("office", "orange")
+        dojo1.add_person("John", "Ashaba", "Staff", "Y")
+        dojo1.save_state("mydb.db")
+        dojo2 = Dojo()
+        dojo2.load_state("mydb.db")
+        room = dojo2.find_room("orange")
+        self.assertIn(room, dojo2.all_rooms)
