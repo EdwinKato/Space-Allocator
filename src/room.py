@@ -23,3 +23,6 @@ class Room(object):
             people.append(person.get_fullname())
         return people
 
+    def remove_person_from_room(self, person):
+        if person in self.residents: self.residents.remove(person)
+        if self.fully_occupied: self.fully_occupied = None
