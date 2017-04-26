@@ -5,6 +5,8 @@ class Room(object):
         self.residents = []
         self.room_name = room_name
         self.room_type =room_type
+        self.fully_occupied = None
+
         if room_type == "office":
             self.maximum_no_of_people = 6
         else:
