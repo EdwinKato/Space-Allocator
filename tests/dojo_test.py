@@ -30,3 +30,8 @@ class TestCreateRoom (unittest.TestCase):
         person = self.dojo.add_person("Neil", "Armstrong", "Staff")
         self.assertTrue(person)
         self.assertTrue(self.dojo.all_people[-1].has_office)
+
+    def test_person_has_been_assigned_living_space(self):
+        person = self.dojo.add_person("Eden", "Hazard", "Fellow", "Y")
+        self.assertTrue(person)
+        self.assertTrue(self.dojo.all_people[-1].has_living_space)
