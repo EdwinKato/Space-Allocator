@@ -103,3 +103,9 @@ class Dojo(object):
                     unallocated_people.append({"Name": person.get_fullname(), "Missing": "Office and Living Space"})
                     unallocated_table.add_row([person.get_fullname(), "Office and Living Space"])
         print(unallocated_table)
+
+    # TODO Cater for Room not found
+    def find_room(self, room_name):
+        room =[room for room in self.all_rooms if room_name == room.room_name]
+        if len(room) > 0:
+            return [room for room in self.all_rooms if room_name == room.room_name][0]
