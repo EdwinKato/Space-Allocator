@@ -12,4 +12,5 @@ class Person(object):
         self.rooms_occupied = []
         self.wants_accomodation = wants_accomodation
 
-
+    def get_fullname(self):
+        return self.first_name + " " + self.last_name
