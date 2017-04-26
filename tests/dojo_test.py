@@ -22,3 +22,6 @@ class TestCreateRoom (unittest.TestCase):
         self.assertTrue(offices)
         new_room_count = len(self.dojo.all_rooms)
         self.assertEqual(new_room_count - initial_room_count, 3)
+
+    def test_addition_of_duplicate_room_names(self):
+        pass
