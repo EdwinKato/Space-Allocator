@@ -16,4 +16,10 @@ class Dojo(object):
             print("An {0} called {1} has been successfully created!".format(room_type, room_name))
         return created_rooms[0] if len(created_rooms) == 1 else created_rooms
 
-
+    def add_person(self, first_name, last_name, person_type, wants_accomodation = "N"):
+        rooms = []
+        person_id = len(self.all_people) + 1
+        person = Staff(first_name, last_name, person_type, person_id) if person_type == "Staff" else\
+            Fellow(first_name, last_name, person_type, wants_accomodation, person_id)
+        print("{0} {1} {2} has been successfully added".format(person_type, first_name, last_name))
+        self.all_people.append(person)
