@@ -89,4 +89,17 @@ class Dojo(object):
                     table.add_row([person.get_fullname(), person.person_type, office_name, living_space_name])
             print("List showing people with space and their respective rooms")
             print(table)
-            
+
+    def print_unallocated(self):
+        unallocated_people = []
+        unallocated_table = PrettyTable(['Name', 'Missing'])
+        for person in self.all_people:
+            if person.wants_accomodation == "N":
+                if not person.has_office:
+                    unallocated_people.append({"Name": person.get_fullname(), "Missing": "Office"})
+                    unallocated_table.add_row([person.get_fullname(), "Office"])
+            else:
+                if not person.has_office and not person.has_living_space:
+                    unallocated_people.append({"Name": person.get_fullname(), "Missing": "Office and Living Space"})
+                    unallocated_table.add_row([person.get_fullname(), "Office and Living Space"])
+        print(unallocated_table)
