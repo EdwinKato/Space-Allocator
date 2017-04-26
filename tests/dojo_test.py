@@ -75,3 +75,12 @@ class TestCreateRoom (unittest.TestCase):
         self.dojo.add_person("Tibaut", "Courtois", "Fellow", "Y")
         result = self.dojo.print_room("test")
         self.assertEqual(['Neil Armstrong', 'Harry Kane', 'Eden Hazard', 'Ngolo Kante', 'Eric Dier', 'Dele Ali'], result)
+
+    def test_print_room_for_reallocated_people(self):
+        self.dojo.create_room("office", "orange")
+        self.dojo.add_person("Neil", "Armstrong", "Staff", "Y")
+        result1 = self.dojo.print_room("test")
+        self.assertIn("Neil Armstrong", result1)
+        self.dojo.reallocate_person(1, "orange")
+        result2 = self.dojo.print_room("test")
+        self.assertNotIn("Neil Armstrong", result2)
