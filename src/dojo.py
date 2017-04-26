@@ -113,3 +113,13 @@ class Dojo(object):
     # TODO Cater for Person not found
     def find_person(self, person_id):
         return [person for person in self.all_people if person_id == person.person_id][0]
+
+    def load_people(self, file):
+        file = open(file, "r")
+        for line in file:
+            person_data = line.split()
+            if len(person_data) == 4:
+                self.add_person(person_data[0], person_data[1], person_data[2], person_data[3])
+            else:
+                self.add_person(person_data[0], person_data[1], person_data[2])
+        file.close()
