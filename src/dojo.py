@@ -109,3 +109,7 @@ class Dojo(object):
         room =[room for room in self.all_rooms if room_name == room.room_name]
         if len(room) > 0:
             return [room for room in self.all_rooms if room_name == room.room_name][0]
+
+    # TODO Cater for Person not found
+    def find_person(self, person_id):
+        return [person for person in self.all_people if person_id == person.person_id][0]
