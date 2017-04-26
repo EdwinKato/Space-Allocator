@@ -3,6 +3,7 @@ from .office import Office
 from .fellow import Fellow
 from .staff import Staff
 from prettytable import PrettyTable
+import sqlite3
 
 class Dojo(object):
     """This class is responsible for managing and allocating rooms to people"""
@@ -87,8 +88,8 @@ class Dojo(object):
                         if "office" in person.rooms_occupied[i]: office_name = person.rooms_occupied[i]['office']
                         if "living_space" in person.rooms_occupied[i]: living_space_name = person.rooms_occupied[i]['living_space']
                     table.add_row([person.get_fullname(), person.person_type, office_name, living_space_name])
-            print("List showing people with space and their respective rooms")
-            print(table)
+                print("List showing people with space and their respective rooms")
+                print(table)
 
     def print_unallocated(self):
         unallocated_people = []
@@ -157,3 +158,51 @@ class Dojo(object):
                         new_room.add_person_to_room(person)
                         person.rooms_occupied[i]['living_space'] = new_room_name
                         print("{0} {1} has been successfully reallocated to room {2}".format(person.first_name, person.last_name,new_room_name))
+
+    def save_state(self, db_file = ""):
+        connection = sqlite3.connect(":memory:") if db_file == "" else sqlite3.connect(db_file)
+        cursor = connection.cursor()
+
+        # Create Room table
+        cursor.execute('''CREATE TABLE IF NOT EXISTS room
+                     (room_name text, room_type text, occupation_status text)''')
+
+        # Save room data
+        room_data = []
+        for room in self.all_rooms:
+            room_data.append((room.room_name, room.room_type, room.fully_occupied))
+        cursor.executemany("INSERT INTO room VALUES (?,?,?)", room_data)
+
+        # Create Person table
+        cursor.execute('''CREATE TABLE IF NOT EXISTS person
+                     (person_id INTEGER, first_name text, last_name text, person_type text,
+                     has_living_space text, has_office text,wants_accomodation text
+                     )''')
+
+        # Save person data
+        person_data = []
+        for person in self.all_people:
+            person_data.append((person.person_id, person.first_name, person.last_name, \
+                                person.person_type, person.has_living_space,person.has_office,
+                                person.wants_accomodation))
+        cursor.executemany("INSERT INTO person VALUES (?,?,?,?,?,?,?)", person_data)
+
+        # Create room_person relationship table table
+        cursor.execute('''CREATE TABLE IF NOT EXISTS room_person
+                     (person_id INTEGER, room_name text, room_type text)''')
+
+        # Save room_person data
+        room_person_data = []
+        for person in self.all_people:
+            for i in range(0, len(person.rooms_occupied)):
+                if "office" in person.rooms_occupied[i]:
+                    room_person_data.append((person.person_id, person.rooms_occupied[i]['office'], "office"))
+                if "living_space" in person.rooms_occupied[i]:
+                    room_person_data.append((person.person_id, person.rooms_occupied[i]['living_space'], "living_space"))
+
+        cursor.executemany("INSERT INTO room_person VALUES (?,?,?)", room_person_data)
+
+        # Save (commit) the changes
+        connection.commit()
+        connection.close()
+
