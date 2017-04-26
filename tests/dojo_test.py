@@ -90,3 +90,10 @@ class TestCreateRoom (unittest.TestCase):
         result = self.dojo.print_allocations()
         print(result)
         self.assertEqual([{'test': ['DELE ALI']}, {'test living space': ['DELE ALI']}], result)
+
+    def test_correct_output_on_print_unallocated(self):
+        self.dojo.add_person("Dele", "Ali", "Fellow", "Y")
+        result = self.dojo.print_allocations()
+        print(result)
+        self.assertEqual([{'test': ['DELE ALI']}, {'test living space': ['DELE ALI']}], result)
+        
