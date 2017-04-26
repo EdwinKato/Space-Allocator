@@ -123,3 +123,37 @@ class Dojo(object):
             else:
                 self.add_person(person_data[0], person_data[1], person_data[2])
         file.close()
+
+    def reallocate_person(self, person_id, new_room_name):
+        person = self.find_person(person_id)
+        new_room = self.find_room(new_room_name)
+        if not new_room.fully_occupied:
+            for i in range(0, len(person.rooms_occupied)):
+                if new_room.room_type == "office":
+                    if "office" in person.rooms_occupied[i]:
+                        current_room = self.find_room(person.rooms_occupied[i]['office'])
+                        if current_room.room_name == new_room_name:
+                            print(
+                                "Can not reallocate to the same room. Please specify room name and try again.")
+                            return
+                        if new_room.room_type != current_room.room_type:
+                            print("Can not reallocate to different room type. Please specify another type and try again.")
+                            return
+                        current_room.remove_person_from_room(person)
+                        new_room.add_person_to_room(person)
+                        person.rooms_occupied[i]['office'] = new_room_name
+                        print("{0} {1} has been successfully reallocated to room {2}".format(person.first_name,person.last_name, new_room_name))
+                else:
+                    if "living_space" in person.rooms_occupied[i]:
+                        current_room = self.find_room(person.rooms_occupied[i]['living_space'])
+                        if current_room.room_name == new_room_name:
+                            print(
+                                "Can not reallocate to the same room. Please specify room name and try again.")
+                            return
+                        if new_room.room_type != current_room.room_type:
+                            print("Can not reallocate to different room type. Please specify another type and try again.")
+                            return
+                        current_room.remove_person_from_room(person)
+                        new_room.add_person_to_room(person)
+                        person.rooms_occupied[i]['living_space'] = new_room_name
+                        print("{0} {1} has been successfully reallocated to room {2}".format(person.first_name, person.last_name,new_room_name))
