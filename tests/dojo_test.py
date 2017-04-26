@@ -25,3 +25,8 @@ class TestCreateRoom (unittest.TestCase):
         self.assertTrue(person)
         new_person_count = len(self.dojo.all_people)
         self.assertEqual(new_person_count - initial_person_count, 1)
+
+    def test_person_has_been_assigned_office(self):
+        person = self.dojo.add_person("Neil", "Armstrong", "Staff")
+        self.assertTrue(person)
+        self.assertTrue(self.dojo.all_people[-1].has_office)
