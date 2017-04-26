@@ -20,7 +20,7 @@ class TestCreateRoom (unittest.TestCase):
         initial_room_count = len(self.dojo.all_rooms)
         offices = self.dojo.create_room("office", "Blue", "Black", "Brown")
         self.assertTrue(offices)
-        new_room_count = len(my_class_instance.all_rooms)
+        new_room_count = len(self.dojo.all_rooms)
         self.assertEqual(new_room_count - initial_room_count, 3)
         
     def test_addition_of_duplicate_room_names(self):
@@ -97,3 +97,7 @@ class TestCreateRoom (unittest.TestCase):
         print(result)
         self.assertEqual([{'test': ['DELE ALI']}, {'test living space': ['DELE ALI']}], result)
         
+    def test_person_exists_after_load_people(self):
+        self.dojo.load_people("../people.txt")
+        last_person = self.dojo.find_person(7)
+        self.assertIn(last_person,self.dojo.all_people)
