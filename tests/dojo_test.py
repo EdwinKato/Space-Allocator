@@ -101,3 +101,13 @@ class TestCreateRoom (unittest.TestCase):
         self.dojo.load_people("../people.txt")
         last_person = self.dojo.find_person(7)
         self.assertIn(last_person,self.dojo.all_people)
+
+    def test_person_exists_in_target_room(self):
+        self.dojo.create_room("office", "orange")
+        self.dojo.add_person("John", "Ashaba", "Staff", "Y")
+        result1 = self.dojo.print_room("test")
+        self.assertIn("John Ashaba", result1)
+        self.dojo.reallocate_person(1, "orange")
+        target_room = self.dojo.find_room("orange")
+        person = self.dojo.find_person(1)
+        self.assertIn(person, target_room.residents)
