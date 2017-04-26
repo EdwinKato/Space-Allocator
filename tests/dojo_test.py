@@ -18,3 +18,10 @@ class TestCreateRoom (unittest.TestCase):
         self.assertTrue(offices)
         new_room_count = len(my_class_instance.all_rooms)
         self.assertEqual(new_room_count - initial_room_count, 3)
+
+    def test_person_added_to_system(self):
+        initial_person_count = len(self.dojo.all_people)
+        person = self.dojo.add_person("Neil", "Armstrong", "Staff")
+        self.assertTrue(person)
+        new_person_count = len(self.dojo.all_people)
+        self.assertEqual(new_person_count - initial_person_count, 1)
