@@ -84,3 +84,16 @@ class TestCreateRoom (unittest.TestCase):
         self.dojo.reallocate_person(1, "orange")
         result2 = self.dojo.print_room("test")
         self.assertNotIn("Neil Armstrong", result2)
+
+    def test_correct_output_on_print_allocations(self):
+        self.dojo.add_person("Dele", "Ali", "Fellow", "Y")
+        result = self.dojo.print_allocations()
+        print(result)
+        self.assertEqual([{'test': ['DELE ALI']}, {'test living space': ['DELE ALI']}], result)
+
+    def test_correct_output_on_print_unallocated(self):
+        self.dojo.add_person("Dele", "Ali", "Fellow", "Y")
+        result = self.dojo.print_allocations()
+        print(result)
+        self.assertEqual([{'test': ['DELE ALI']}, {'test living space': ['DELE ALI']}], result)
+        
