@@ -23,3 +23,14 @@ class Dojo(object):
             Fellow(first_name, last_name, person_type, wants_accomodation, person_id)
         print("{0} {1} {2} has been successfully added".format(person_type, first_name, last_name))
         self.all_people.append(person)
+        # Assign office to person
+        office_rooms = [room for room in self.all_rooms if room.room_type == "office"]
+        for office in office_rooms:
+            if not office.fully_occupied:
+                office.add_person_to_room(person)
+                person.has_office = True
+                rooms.append({"office": office.room_name})
+                print("{0} has been allocated the office {1}".format(first_name, office.room_name))
+                break
+        if not person.has_office:
+            print("Sorry, there are no more office rooms for {0} to occupy.".format(first_name))
