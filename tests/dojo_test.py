@@ -63,3 +63,24 @@ class TestCreateRoom (unittest.TestCase):
         self.dojo.add_person("Tibaut", "Courtois", "Fellow", "Y")
         self.assertEqual(len(self.test_office.residents), 6)
 
+    def test_output_of_print_room(self):
+        self.dojo.add_person("Neil", "Armstrong", "Staff", "Y")
+        self.dojo.add_person("Harry", "Kane", "Fellow", "Y")
+        self.dojo.add_person("Eden", "Hazard", "Staff", "Y")
+        self.dojo.add_person("Ngolo", "Kante", "Staff", "Y")
+        self.dojo.add_person("Eric", "Dier", "Staff", "Y")
+        self.dojo.add_person("Dele", "Ali", "Fellow", "Y")
+        self.dojo.add_person("Diego", "Costa", "Fellow", "Y")
+        self.dojo.add_person("Willian", "Borges", "Staff", "Y")
+        self.dojo.add_person("Tibaut", "Courtois", "Fellow", "Y")
+        result = self.dojo.print_room("test")
+        self.assertEqual(['Neil Armstrong', 'Harry Kane', 'Eden Hazard', 'Ngolo Kante', 'Eric Dier', 'Dele Ali'], result)
+
+    def test_print_room_for_reallocated_people(self):
+        self.dojo.create_room("office", "orange")
+        self.dojo.add_person("Neil", "Armstrong", "Staff", "Y")
+        result1 = self.dojo.print_room("test")
+        self.assertIn("Neil Armstrong", result1)
+        self.dojo.reallocate_person(1, "orange")
+        result2 = self.dojo.print_room("test")
+        self.assertNotIn("Neil Armstrong", result2)

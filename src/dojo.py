@@ -52,3 +52,8 @@ class Dojo(object):
         person.rooms_occupied = rooms
         print({"Person": person.first_name + " " + person.last_name, "Rooms": rooms})
         return {"Person": person.first_name + " " + person.last_name, "Rooms": rooms}
+
+    def print_room(self, room_name):
+        output = "\n".join(self.find_room(room_name).get_people_in_room())
+        print(self.find_room(room_name).get_people_in_room())
+        return self.find_room(room_name).get_people_in_room()
