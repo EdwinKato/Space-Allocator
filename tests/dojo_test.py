@@ -39,3 +39,15 @@ class TestCreateRoom (unittest.TestCase):
     def test_return_type_of_add_person(self):
         person = self.dojo.add_person("Eden", "Hazard", "Fellow", "Y")
         self.assertEqual({'Person': 'Eden Hazard', 'Rooms': [{'office': 'test'}, {'living_space': 'test living space'}]},person)
+
+    def test_that_maximum_no_of_people_is_not_exceeded(self):
+        self.dojo.add_person("Neil", "Armstrong", "Staff", "Y")
+        self.dojo.add_person("Harry", "Kane", "Fellow", "Y")
+        self.dojo.add_person("Eden", "Hazard", "Staff", "Y")
+        self.dojo.add_person("Ngolo", "Kante", "Staff", "Y")
+        self.dojo.add_person("Eric", "Dier", "Staff", "Y")
+        self.dojo.add_person("Dele", "Ali", "Fellow", "Y")
+        self.dojo.add_person("Diego", "Costa", "Fellow", "Y")
+        self.dojo.add_person("Willian", "Borges", "Staff", "Y")
+        self.dojo.add_person("Tibaut", "Courtois", "Fellow", "Y")
+        self.assertEqual(len(self.test_office.residents), 6)
