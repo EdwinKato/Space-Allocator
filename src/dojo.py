@@ -34,3 +34,18 @@ class Dojo(object):
                 break
         if not person.has_office:
             print("Sorry, there are no more office rooms for {0} to occupy.".format(first_name))
+        # Assign person living_space
+        if wants_accomodation == "Y" and person_type.lower() == "fellow":
+            accomodation_rooms = [room for room in self.all_rooms if room.room_type == "living_space"]
+            for living_room in accomodation_rooms:
+                if not living_room.fully_occupied:
+                    living_room.add_person_to_room(person)
+                    person.has_living_space = True
+                    rooms.append({"living_space": living_room.room_name})
+                    print("{0} has been allocated the living space {1}".format(first_name, office.room_name))
+                    break
+            if not person.has_living_space:
+                print("Sorry, there are no more free accomodation rooms for {0} to occupy.".format(first_name))
+        person.rooms_occupied = rooms
+        print({"Person": person.first_name + " " + person.last_name, "Rooms": rooms})
+        return {"Person": person.first_name + " " + person.last_name, "Rooms": rooms}
