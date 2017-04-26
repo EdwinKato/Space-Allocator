@@ -61,3 +61,32 @@ class Dojo(object):
         output = "\n".join(self.find_room(room_name).get_people_in_room())
         print(self.find_room(room_name).get_people_in_room())
         return self.find_room(room_name).get_people_in_room()
+
+    def print_allocations(self, file_name = "", print_table = "N"):
+        if print_table != "Y":
+            rooms_people = []
+            for room in self.all_rooms:
+                # people = ",".join([(person.get_fullname()).upper() for person in room.residents])
+                people = [(person.get_fullname()).upper() for person in room.residents]
+                rooms_people.append({room.room_name: people})
+                output = "Room: {0} \n ------------------------------------- \n{1}\n".format(room.room_name,",".join(people))
+                if file_name == "":
+                    print(output)
+                else:
+                    file = open(file_name, "w")
+                    file.write(str(output))
+                    file.close()
+            return rooms_people
+        else:
+            allocated_people = [person for person in self.all_people if len(person.rooms_occupied) != 0]
+            if len(allocated_people) > 0:
+                table = PrettyTable(['Name', 'Type', 'Office', 'Living Space'])
+                for person in allocated_people:
+                    office_name, living_space_name = "Not Assigned", "Not Assigned"
+                    for i in range(0, len(person.rooms_occupied)):
+                        if "office" in person.rooms_occupied[i]: office_name = person.rooms_occupied[i]['office']
+                        if "living_space" in person.rooms_occupied[i]: living_space_name = person.rooms_occupied[i]['living_space']
+                    table.add_row([person.get_fullname(), person.person_type, office_name, living_space_name])
+            print("List showing people with space and their respective rooms")
+            print(table)
+            
