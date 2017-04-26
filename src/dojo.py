@@ -1,4 +1,8 @@
-from .room import Room
+from .living_space import LivingSpace
+from .office import Office
+from .fellow import Fellow
+from .staff import Staff
+from prettytable import PrettyTable
 
 class Dojo(object):
     """This class is responsible for managing and allocating rooms to people"""
