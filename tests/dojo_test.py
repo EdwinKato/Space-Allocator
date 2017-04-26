@@ -3,21 +3,32 @@ from src.dojo import Dojo
 
 
 class TestCreateRoom (unittest.TestCase):
+
+    def setUp(self):
+        self.dojo = Dojo()
+        self.test_office = self.dojo.create_room("office", "test")
+        self.test_living_space = self.dojo.create_room("living_space", "test living space")
+
     def test_create_room_successfully(self):
-        my_class_instance = Dojo()
-        initial_room_count = len(my_class_instance.all_rooms)
-        blue_office = my_class_instance.create_room("office", "Blue")
+        initial_room_count = len(self.dojo.all_rooms)
+        blue_office = self.dojo.create_room("office", "Blue")
         self.assertTrue(blue_office)
-        new_room_count = len(my_class_instance.all_rooms)
+        new_room_count = len(self.dojo.all_rooms)
         self.assertEqual(new_room_count - initial_room_count, 1)
 
     def test_create_rooms_successfully(self):
-        my_class_instance = Dojo()
-        initial_room_count = len(my_class_instance.all_rooms)
-        offices = my_class_instance.create_room("office", "Blue", "Black", "Brown")
+        initial_room_count = len(self.dojo.all_rooms)
+        offices = self.dojo.create_room("office", "Blue", "Black", "Brown")
         self.assertTrue(offices)
         new_room_count = len(my_class_instance.all_rooms)
         self.assertEqual(new_room_count - initial_room_count, 3)
+        
+    def test_addition_of_duplicate_room_names(self):
+        initial_room_count = len(self.dojo.all_people)
+        room1 = self.dojo.create_room("office", "Blue")
+        room1 = self.dojo.create_room("office", "Blue")
+        new_room_count = len(self.dojo.all_people)
+        self.assertEqual(new_room_count - initial_room_count, 0)
 
     def test_person_added_to_system(self):
         initial_person_count = len(self.dojo.all_people)
@@ -51,3 +62,4 @@ class TestCreateRoom (unittest.TestCase):
         self.dojo.add_person("Willian", "Borges", "Staff", "Y")
         self.dojo.add_person("Tibaut", "Courtois", "Fellow", "Y")
         self.assertEqual(len(self.test_office.residents), 6)
+
