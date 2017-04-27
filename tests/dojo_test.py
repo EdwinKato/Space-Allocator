@@ -2,7 +2,7 @@ import unittest
 from src.dojo import Dojo
 
 
-class TestCreateRoom (unittest.TestCase):
+class TestSpaceAllocator (unittest.TestCase):
 
     def setUp(self):
         self.dojo = Dojo()
