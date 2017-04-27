@@ -21,6 +21,7 @@ Options:
 import sys
 import cmd
 from docopt import docopt, DocoptExit
+import colorful
 from src.dojo import Dojo
 
 dojo = Dojo()
@@ -57,8 +58,8 @@ def docopt_cmd(func):
 
 
 class SpaceAllocator (cmd.Cmd):
-    intro = 'Welcome to my Space Allocator!' \
-        + ' (type help for a list of commands.)'
+    intro = colorful.bold_green('Welcome to my Space Allocator!\n' \
+        + ' (Please type help for a list of commands and guidance.)')
     prompt = '(space_allocator) '
     file = None
 
@@ -69,11 +70,13 @@ class SpaceAllocator (cmd.Cmd):
         for room_name in arg['<room_name>']:
             dojo.create_room(arg['<room_type>'], room_name)
 
+    def default(self, line):
+        print(colorful.bold_orange('The command ' + line.lower() + ' is not recognized.' \
+            + ' (Please enter another command or type help for list of available commands and their usage.)'))
 
     @docopt_cmd
     def do_add_person(self, arg):
         """Usage: add_person <first_name> <last_name> <person_type> [<wants_accommodation>]"""
-        # dojo.add_person("Neil", "Armstrong", "Staff", "Y")
         if arg['<wants_accommodation>'] is None:
             dojo.add_person(arg['<first_name>'], arg['<last_name>'], arg['<person_type>'])
         else:

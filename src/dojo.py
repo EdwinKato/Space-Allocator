@@ -4,6 +4,7 @@ from .fellow import Fellow
 from .staff import Staff
 from prettytable import PrettyTable
 import sqlite3
+import colorful
 
 class Dojo(object):
     """This class is responsible for managing and allocating rooms to people"""
@@ -19,9 +20,9 @@ class Dojo(object):
                 room = Office(room_name) if room_type == "office" else LivingSpace(room_name)
                 self.all_rooms.append(room)
                 created_rooms.append(room)
-                print("An {0} called {1} has been successfully created!".format(room_type, room_name))
+                print(colorful.green("An {0} called {1} has been successfully created!".format(room_type, room_name)))
             else:
-                print("Room with name: {0} already exists. Please try using another name".format(room_name))
+                print(colorful.red("Room with name: {0} already exists. Please try using another name".format(room_name)))
         return created_rooms[0] if len(created_rooms) == 1 else created_rooms
 
     def add_person(self, first_name, last_name, person_type, wants_accommodation = "N"):
@@ -29,7 +30,7 @@ class Dojo(object):
         person_id = len(self.all_people) + 1
         person = Staff(first_name, last_name, person_id) if person_type.lower() == "staff" else\
             Fellow(first_name, last_name, wants_accommodation, person_id)
-        print("{0} {1} {2} has been successfully added".format(person_type, first_name, last_name))
+        print(colorful.green("{0} {1} {2} has been successfully added".format(person_type, first_name, last_name)))
         self.all_people.append(person)
         # Assign office to person
         office_rooms = [room for room in self.all_rooms if room.room_type.lower() == "office"]
@@ -38,10 +39,10 @@ class Dojo(object):
                 office.add_person_to_room(person)
                 person.has_office = True
                 rooms.append({"office": office.room_name})
-                print("{0} has been allocated the office {1}".format(first_name, office.room_name))
+                print(colorful.green("{0} has been allocated the office {1}".format(first_name, office.room_name)))
                 break
         if not person.has_office:
-            print("Sorry, there are no more office rooms for {0} to occupy.".format(first_name))
+            print(colorful.red("Sorry, there are no more office rooms for {0} to occupy.".format(first_name)))
         # Assign person living_space
         if wants_accommodation == "Y" and person_type.lower() == "fellow":
             accommodation_rooms = [room for room in self.all_rooms if room.room_type == "living_space"]
@@ -50,17 +51,16 @@ class Dojo(object):
                     living_room.add_person_to_room(person)
                     person.has_living_space = True
                     rooms.append({"living_space": living_room.room_name})
-                    print("{0} has been allocated the living space {1}".format(first_name, office.room_name))
+                    print(colorful.green("{0} has been allocated the living space {1}".format(first_name, office.room_name)))
                     break
             if not person.has_living_space:
-                print("Sorry, there are no more free accommodation rooms for {0} to occupy.".format(first_name))
+                print(colorful.red("Sorry, there are no more free accommodation rooms for {0} to occupy.".format(first_name)))
         person.rooms_occupied = rooms
-        print({"Person": person.first_name + " " + person.last_name, "Rooms": rooms})
         return {"Person": person.first_name + " " + person.last_name, "Rooms": rooms}
 
     def print_room(self, room_name):
         output = "\n".join(self.find_room(room_name).get_people_in_room())
-        print(self.find_room(room_name).get_people_in_room())
+        # print(self.find_room(room_name).get_people_in_room())
         return self.find_room(room_name).get_people_in_room()
 
     def print_allocations(self, file_name = "", print_table = "N"):
@@ -88,7 +88,7 @@ class Dojo(object):
                         if "office" in person.rooms_occupied[i]: office_name = person.rooms_occupied[i]['office']
                         if "living_space" in person.rooms_occupied[i]: living_space_name = person.rooms_occupied[i]['living_space']
                     table.add_row([person.get_fullname(), person.person_type, office_name, living_space_name])
-                print("List showing people with space and their respective rooms")
+                print(colorful.green("List showing people with space and their respective rooms"))
                 print(table)
 
     def print_unallocated(self):
@@ -134,30 +134,30 @@ class Dojo(object):
                     if "office" in person.rooms_occupied[i]:
                         current_room = self.find_room(person.rooms_occupied[i]['office'])
                         if current_room.room_name == new_room_name:
-                            print(
-                                "Can not reallocate to the same room. Please specify room name and try again.")
+                            print(colorful.red(
+                                "Can not reallocate to the same room. Please specify room name and try again."))
                             return
                         if new_room.room_type != current_room.room_type:
-                            print("Can not reallocate to different room type. Please specify another type and try again.")
+                            print(colorful.red("Can not reallocate to different room type. Please specify another type and try again."))
                             return
                         current_room.remove_person_from_room(person)
                         new_room.add_person_to_room(person)
                         person.rooms_occupied[i]['office'] = new_room_name
-                        print("{0} {1} has been successfully reallocated to room {2}".format(person.first_name,person.last_name, new_room_name))
+                        print(colorful.green("{0} {1} has been successfully reallocated to room {2}".format(person.first_name,person.last_name, new_room_name)))
                 else:
                     if "living_space" in person.rooms_occupied[i]:
                         current_room = self.find_room(person.rooms_occupied[i]['living_space'])
                         if current_room.room_name == new_room_name:
-                            print(
-                                "Can not reallocate to the same room. Please specify room name and try again.")
+                            print(colorful.red(
+                                "Can not reallocate to the same room. Please specify room name and try again."))
                             return
                         if new_room.room_type != current_room.room_type:
-                            print("Can not reallocate to different room type. Please specify another type and try again.")
+                            print(colorful.red("Can not reallocate to different room type. Please specify another type and try again."))
                             return
                         current_room.remove_person_from_room(person)
                         new_room.add_person_to_room(person)
                         person.rooms_occupied[i]['living_space'] = new_room_name
-                        print("{0} {1} has been successfully reallocated to room {2}".format(person.first_name, person.last_name,new_room_name))
+                        print(colorful.green("{0} {1} has been successfully reallocated to room {2}".format(person.first_name, person.last_name,new_room_name)))
 
     def save_state(self, db_file = ""):
         connection = sqlite3.connect(":memory:") if db_file == "" else sqlite3.connect(db_file)
