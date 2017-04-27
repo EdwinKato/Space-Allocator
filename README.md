@@ -16,3 +16,6 @@ Dojo
 
 ## Dependencies
 * docopt *Version 0.6.2*
+* colorama *Version 0.3.9*
+* colorful *Version 0.3.8*
+* prettytable *Version 0.7.2*
