@@ -16,7 +16,7 @@ class Dojo(object):
         created_rooms = []
         for room_name in room_names:
             if room_name not in [room.room_name for room in self.all_rooms]:
-                room = Office(room_type, room_name) if room_type == "office" else LivingSpace(room_type, room_name)
+                room = Office(room_name) if room_type == "office" else LivingSpace(room_name)
                 self.all_rooms.append(room)
                 created_rooms.append(room)
                 print("An {0} called {1} has been successfully created!".format(room_type, room_name))
@@ -24,15 +24,15 @@ class Dojo(object):
                 print("Room with name: {0} already exists. Please try using another name".format(room_name))
         return created_rooms[0] if len(created_rooms) == 1 else created_rooms
 
-    def add_person(self, first_name, last_name, person_type, wants_accomodation = "N"):
+    def add_person(self, first_name, last_name, person_type, wants_accommodation = "N"):
         rooms = []
         person_id = len(self.all_people) + 1
-        person = Staff(first_name, last_name, person_type, person_id) if person_type == "Staff" else\
-            Fellow(first_name, last_name, person_type, wants_accomodation, person_id)
+        person = Staff(first_name, last_name, person_id) if person_type.lower() == "staff" else\
+            Fellow(first_name, last_name, wants_accommodation, person_id)
         print("{0} {1} {2} has been successfully added".format(person_type, first_name, last_name))
         self.all_people.append(person)
         # Assign office to person
-        office_rooms = [room for room in self.all_rooms if room.room_type == "office"]
+        office_rooms = [room for room in self.all_rooms if room.room_type.lower() == "office"]
         for office in office_rooms:
             if not office.fully_occupied:
                 office.add_person_to_room(person)
@@ -43,9 +43,9 @@ class Dojo(object):
         if not person.has_office:
             print("Sorry, there are no more office rooms for {0} to occupy.".format(first_name))
         # Assign person living_space
-        if wants_accomodation == "Y" and person_type.lower() == "fellow":
-            accomodation_rooms = [room for room in self.all_rooms if room.room_type == "living_space"]
-            for living_room in accomodation_rooms:
+        if wants_accommodation == "Y" and person_type.lower() == "fellow":
+            accommodation_rooms = [room for room in self.all_rooms if room.room_type == "living_space"]
+            for living_room in accommodation_rooms:
                 if not living_room.fully_occupied:
                     living_room.add_person_to_room(person)
                     person.has_living_space = True
@@ -53,7 +53,7 @@ class Dojo(object):
                     print("{0} has been allocated the living space {1}".format(first_name, office.room_name))
                     break
             if not person.has_living_space:
-                print("Sorry, there are no more free accomodation rooms for {0} to occupy.".format(first_name))
+                print("Sorry, there are no more free accommodation rooms for {0} to occupy.".format(first_name))
         person.rooms_occupied = rooms
         print({"Person": person.first_name + " " + person.last_name, "Rooms": rooms})
         return {"Person": person.first_name + " " + person.last_name, "Rooms": rooms}
@@ -95,7 +95,7 @@ class Dojo(object):
         unallocated_people = []
         unallocated_table = PrettyTable(['Name', 'Missing'])
         for person in self.all_people:
-            if person.wants_accomodation == "N":
+            if person.wants_accommodation == "N":
                 if not person.has_office:
                     unallocated_people.append({"Name": person.get_fullname(), "Missing": "Office"})
                     unallocated_table.add_row([person.get_fullname(), "Office"])
@@ -176,7 +176,7 @@ class Dojo(object):
         # Create Person table
         cursor.execute('''CREATE TABLE IF NOT EXISTS person
                      (person_id INTEGER, first_name text, last_name text, person_type text,
-                     has_living_space text, has_office text,wants_accomodation text
+                     has_living_space text, has_office text,wants_accommodation text
                      )''')
 
         # Save person data
@@ -184,7 +184,7 @@ class Dojo(object):
         for person in self.all_people:
             person_data.append((person.person_id, person.first_name, person.last_name, \
                                 person.person_type, person.has_living_space,person.has_office,
-                                person.wants_accomodation))
+                                person.wants_accommodation))
         cursor.executemany("INSERT INTO person VALUES (?,?,?,?,?,?,?)", person_data)
 
         # Create room_person relationship table table
@@ -216,17 +216,16 @@ class Dojo(object):
         for room in rooms:
             room_name, room_type, occupation_status = room[0], room[1], room[2]
             loaded_room = self.create_room(room_type, room_name)
-            loaded_room.fully_occupied = occupation_status
 
         # Load People
         cursor.execute('''SELECT * FROM person''')
         people = cursor.fetchall()
         for person in people:
-            person_id, first_name, last_name, person_type, has_living_space, has_office, wants_accomodation \
+            person_id, first_name, last_name, person_type, has_living_space, has_office, wants_accommodation \
                 = person[0], person[1], person[2], person[3], person[4], person[5], person[6]
 
-            loaded_person = Staff(first_name, last_name, person_type, person_id, has_living_space, has_office)\
-                if person_type == "Staff" else Fellow(first_name, last_name, person_type, wants_accomodation, person_id,\
+            loaded_person = Staff(first_name, last_name, person_id, has_living_space, has_office)\
+                if person_type == "Staff" else Fellow(first_name, last_name, wants_accommodation, person_id,\
                       has_living_space, has_office)
             self.all_people.append(loaded_person)
 
