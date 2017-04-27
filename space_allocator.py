@@ -1,40 +1,147 @@
-"""space_allocator.py
-
-Usage:
-    create_room <room_type> <room_name>
-        Create rooms in the dojo
-    add_person <person_name> <FELLOW|STAFF> [wants_accommodation]
-        Adds and allocate space to a person in the dojo
-    print_room <room_name>
-        Prints the names of all the people in room_name on the screen.
-    print_allocations [-o=filename]
-        Prints a list of allocations onto the screen
-    space_allocator.py --version
-        Shows the program's version number and exits
-    space_allocator.py (-h | --help)
-        Show this help message and exit
-    print_unallocated [-o=filename]
-        Prints a list of unallocated people to the screen
-    reallocate_person <person_identifier> <new_room_name>
-        Reallocate the person with person_identifier to new_room_name
-    load_people [-o=filename]
-        Adds people to rooms from a txt file. See Appendix 1A for text input format
-    save_state [--db=sqlite_database]
-        Persists all the data stored in the app to an SQLite database
-    load_state <sqlite_database>
-        Loads data from a database into the application.
-
-Options:
-  -h --help     Show this screen.
-  --version     Show version. 
-
 """
-from docopt import docopt
+Welcome to the Space allocator.
+Usage:
+    space_allocator create_room <room_type> <room_name>...
+    space_allocator add_person <first_name> <last_name> <person_type> [<wants_accommodation>]
+    space_allocator print_room <room_name>
+    space_allocator print_allocations [<file_name>]
+    space_allocator print_unallocated [<file_name>]
+    space_allocator reallocate_person <person_identifier> <new_room_name>
+    space_allocator load_people <file_name>
+    space_allocator save_state [<sqlite_database>]
+    space_allocator load_state [<sqlite_database>]
+    space_allocator (-i | --interactive)
+    space_allocator (-h | --help | --version)
+Options:
+    --version  show program's version number and exit
+    -i, --interactive  Interactive Mode
+    -h, --help  Show this screen and exit.
+"""
+
+import sys
+import cmd
+from docopt import docopt, DocoptExit
 from src.dojo import Dojo
 
+dojo = Dojo()
 
-if __name__ == '__main__':
-    # arguments = docopt(__doc__, version='Space allocator 1.0')
-    dojo = Dojo()
-    dojo.create_room("office", "blue")
-    print(dojo)
+def docopt_cmd(func):
+    """
+    This decorator is used to simplify the try/except block and pass the result
+    of the docopt parsing to the called action.
+    """
+    def fn(self, arg):
+        try:
+            opt = docopt(fn.__doc__, arg)
+
+        except DocoptExit as e:
+            # The DocoptExit is thrown when the args do not match.
+            # We print a message to the user and the usage block.
+
+            print('Invalid Command!')
+            print(e)
+            return
+
+        except SystemExit:
+            # The SystemExit exception prints the usage for --help
+            # We do not need to do the print here.
+
+            return
+
+        return func(self, opt)
+
+    fn.__name__ = func.__name__
+    fn.__doc__ = func.__doc__
+    fn.__dict__.update(func.__dict__)
+    return fn
+
+
+class SpaceAllocator (cmd.Cmd):
+    intro = 'Welcome to my Space Allocator!' \
+        + ' (type help for a list of commands.)'
+    prompt = '(space_allocator) '
+    file = None
+
+    @docopt_cmd
+    def do_create_room(self, arg):
+        """Usage: create_room <room_type> <room_name>..."""
+
+        for room_name in arg['<room_name>']:
+            dojo.create_room(arg['<room_type>'], room_name)
+
+
+    @docopt_cmd
+    def do_add_person(self, arg):
+        """Usage: add_person <first_name> <last_name> <person_type> [<wants_accommodation>]"""
+        # dojo.add_person("Neil", "Armstrong", "Staff", "Y")
+        if arg['<wants_accommodation>'] is None:
+            dojo.add_person(arg['<first_name>'], arg['<last_name>'], arg['<person_type>'])
+        else:
+            dojo.add_person(arg['<first_name>'], arg['<last_name>'], arg['<person_type>'], arg['<wants_accommodation>'])
+
+    @docopt_cmd
+    def do_print_room(self, arg):
+        """Usage: print_room <room_name>"""
+
+        dojo.print_room(arg['<room_name>'])
+
+    @docopt_cmd
+    def do_print_allocations(self, arg):
+        """Usage: print_allocations [<file_name>]"""
+
+        if arg['<file_name>'] is None:
+            dojo.print_allocations()
+        else:
+            dojo.print_allocations(arg['<file_name>'])
+
+    @docopt_cmd
+    def do_print_unallocated(self, arg):
+        """Usage: print_unallocated [<file_name>]"""
+
+        if arg['<file_name>'] is None:
+            dojo.print_unallocated()
+        else:
+            dojo.print_unallocated(arg['<file_name>'])
+
+    @docopt_cmd
+    def do_reallocate_person(self, arg):
+        """Usage: reallocate_person <person_identifier> <new_room_name>"""
+
+        dojo.reallocate_person(arg['<person_identifier>'], arg['<new_room_name>'])
+
+    @docopt_cmd
+    def do_load_people(self, arg):
+        """Usage: load_people <file_name>"""
+
+        dojo.load_people(arg['<file_name>'])
+
+    @docopt_cmd
+    def do_print_save_state(self, arg):
+        """Usage: save_state [<sqlite_database>]"""
+
+        if arg['<sqlite_database>'] is None:
+            dojo.save_state()
+        else:
+            dojo.save_state(arg['<sqlite_database>'])
+
+    @docopt_cmd
+    def do_load_state(self, arg):
+        """Usage: load_state [<sqlite_database>]"""
+
+        if arg['<sqlite_database>'] is None:
+            dojo.load_state()
+        else:
+            dojo.load_state(arg['<sqlite_database>'])
+
+    def do_quit(self, arg):
+        """Quits out of Interactive Mode."""
+
+        print('Good Bye!')
+        exit()
+
+opt = docopt(__doc__, sys.argv[1:])
+
+if opt['--interactive']:
+    SpaceAllocator().cmdloop()
+
+print(opt)
