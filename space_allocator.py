@@ -119,7 +119,7 @@ class SpaceAllocator (cmd.Cmd):
         dojo.load_people(arg['<file_name>'])
 
     @docopt_cmd
-    def do_print_save_state(self, arg):
+    def do_save_state(self, arg):
         """Usage: save_state [<sqlite_database>]"""
 
         if arg['<sqlite_database>'] is None:
