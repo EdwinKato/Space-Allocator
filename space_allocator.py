@@ -4,7 +4,7 @@ Usage:
     space_allocator create_room <room_type> <room_name>...
     space_allocator add_person <first_name> <last_name> <person_type> [<wants_accommodation>]
     space_allocator print_room <room_name>
-    space_allocator print_allocations [<file_name>]
+    space_allocator print_allocations [<file_name>] [--table]
     space_allocator print_unallocated [<file_name>]
     space_allocator reallocate_person <person_identifier> <new_room_name>
     space_allocator load_people <file_name>
@@ -14,6 +14,7 @@ Usage:
     space_allocator (-h | --help | --version)
 Options:
     --version  show program's version number and exit
+    --table  Prints out a table on the screen.
     -i, --interactive  Interactive Mode
     -h, --help  Show this screen and exit.
 """
@@ -90,12 +91,15 @@ class SpaceAllocator (cmd.Cmd):
 
     @docopt_cmd
     def do_print_allocations(self, arg):
-        """Usage: print_allocations [<file_name>]"""
+        """Usage: print_allocations [<file_name>] [--table]"""
 
-        if arg['<file_name>'] is None:
-            dojo.print_allocations()
-        else:
+        if arg['<file_name>'] is not None:
             dojo.print_allocations(arg['<file_name>'])
+        else:
+            if arg['--table'] is None:
+                dojo.print_allocations()
+            else:
+                dojo.print_allocations(print_table = "Y")
 
     @docopt_cmd
     def do_print_unallocated(self, arg):
