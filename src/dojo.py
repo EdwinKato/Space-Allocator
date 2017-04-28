@@ -51,7 +51,7 @@ class Dojo(object):
                     living_room.add_person_to_room(person)
                     person.has_living_space = True
                     rooms.append({"living_space": living_room.room_name})
-                    print(colorful.green("{0} has been allocated the living space {1}".format(first_name, office.room_name)))
+                    print(colorful.green("{0} has been allocated the living space {1}".format(first_name, living_room.room_name)))
                     break
             if not person.has_living_space:
                 print(colorful.red("Sorry, there are no more free accommodation rooms for {0} to occupy.".format(first_name)))
