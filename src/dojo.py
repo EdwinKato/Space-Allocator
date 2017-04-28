@@ -70,17 +70,18 @@ class Dojo(object):
     def print_allocations(self, file_name = "", print_table = "N"):
         if print_table != "Y":
             rooms_people = []
+            printed_output = ""
             for room in self.all_rooms:
-                # people = ",".join([(person.get_fullname()).upper() for person in room.residents])
                 people = [(person.get_fullname()).upper() for person in room.residents]
                 rooms_people.append({room.room_name: people})
-                output = "Room: {0} \n ------------------------------------- \n{1}\n".format(room.room_name,",".join(people))
-                if file_name == "":
-                    print(colorful.blue(output))
-                else:
-                    file = open(file_name, "w")
-                    file.write(str(output))
-                    file.close()
+                output = "Room: {0} \n ------------------------------------- \n{1}\n\n".format(room.room_name,",".join(people))
+                printed_output += output
+            if file_name == "":
+                print(colorful.blue(printed_output))
+            else:
+                file = open(file_name, "w")
+                file.write(str(printed_output))
+                file.close()
             return rooms_people
         else:
             allocated_people = [person for person in self.all_people if len(person.rooms_occupied) != 0]
