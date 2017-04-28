@@ -239,31 +239,40 @@ class Dojo(object):
         connection = sqlite3.connect(":memory:") if db_file == "" else sqlite3.connect(db_file)
         cursor = connection.cursor()
 
-        # Load Rooms
-        cursor.execute('''SELECT * FROM room''')
-        rooms = cursor.fetchall()
-        for room in rooms:
-            room_name, room_type, occupation_status = room[0], room[1], room[2]
-            loaded_room = self.create_room(room_type, room_name)
+        try:
+            # Load Rooms
+            cursor.execute('''SELECT * FROM room''')
+            rooms = cursor.fetchall()
+            for room in rooms:
+                room_name, room_type, occupation_status = room[0], room[1], room[2]
+                loaded_room = self.create_room(room_type, room_name)
+        except:
+            print(colorful.red("The application has failed to load room data, please contact a senior developer for help."))
 
-        # Load People
-        cursor.execute('''SELECT * FROM person''')
-        people = cursor.fetchall()
-        for person in people:
-            person_id, first_name, last_name, person_type, has_living_space, has_office, wants_accommodation \
-                = person[0], person[1], person[2], person[3], person[4], person[5], person[6]
+        try:
+            # Load People
+            cursor.execute('''SELECT * FROM person''')
+            people = cursor.fetchall()
+            for person in people:
+                person_id, first_name, last_name, person_type, has_living_space, has_office, wants_accommodation \
+                    = person[0], person[1], person[2], person[3], person[4], person[5], person[6]
 
-            loaded_person = Staff(first_name, last_name, person_id, has_living_space, has_office)\
-                if person_type == "Staff" else Fellow(first_name, last_name, wants_accommodation, person_id,\
-                      has_living_space, has_office)
-            self.all_people.append(loaded_person)
+                loaded_person = Staff(first_name, last_name, person_id, has_living_space, has_office)\
+                    if person_type == "Staff" else Fellow(first_name, last_name, wants_accommodation, person_id,\
+                        has_living_space, has_office)
+                self.all_people.append(loaded_person)
+        except:
+            print(colorful.red("The application has failed to load person data, please contact a senior developer for help."))
 
-        # Load Residents
-        cursor.execute('''SELECT * FROM room_person''')
-        room_person_data = cursor.fetchall()
-        for room_person in room_person_data:
-            person_id, room_name, room_type = int(room_person[0]), room_person[1], room_person[2]
-            related_room = self.find_room(room_name)
-            related_person = self.find_person(person_id)
-            related_room.residents.append(related_person)
-            related_person.rooms_occupied.append({room_type :room_name})
+        try:
+            # Load Residents
+            cursor.execute('''SELECT * FROM room_person''')
+            room_person_data = cursor.fetchall()
+            for room_person in room_person_data:
+                person_id, room_name, room_type = int(room_person[0]), room_person[1], room_person[2]
+                related_room = self.find_room(room_name)
+                related_person = self.find_person(person_id)
+                related_room.residents.append(related_person)
+                related_person.rooms_occupied.append({room_type :room_name})
+        except:
+            print(colorful.red("The application has failed to load relationship between person and room, please contact a senior developer for help."))
