@@ -116,6 +116,43 @@ load_state [<sqlite_database>]
 load_state sqlite_database.db
 ```
 
+## Tests
+
+Enables you to run tests on the different parts of the application to ensure that they are running as intended.
+
+### Running tests
+Open the terminal and type in the command below to run tests on the program.
+Please remember to use the correct python installation on your system. Replace with ```python3``` if need be.
+```
+python3 -m unittest tests/test_dojo.py
+```
+
+### Gather test coverage data
+Determine the percentage of code tested.
+Test coverage is done using coverage.py and is adapted from http://nedbatchelder.com/code/coverage/
+Follow the link to find out more about installation and usage.
+
+```
+coverage run -m unittest discover -s tests/
+```
+### Print / Output test coverage report
+
+#### Command-line report
+Use the commands below to print out a simple command-line report
+
+```
+coverage report -m
+```
+
+#### HTML report
+
+To print a fancier HTML report:
+
+```
+coverage html
+open htmlcov/index.html
+```
+
 ## Dependencies
 
 * docopt *Version 0.6.2*
