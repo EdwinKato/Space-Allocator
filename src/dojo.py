@@ -85,7 +85,6 @@ class Dojo(object):
         """
 
         rooms = []
-        # if self.create_person(first_name, last_name, person_type):
 
         person_id = len(self.all_people) + 1 # Generate person_id
         if not first_name.isalpha() or not last_name.isalpha():
@@ -119,23 +118,6 @@ class Dojo(object):
                 colorful.red(
                     "Sorry, there are no more office rooms for {0} to occupy.".format(first_name)))
 
-        # office_rooms = \
-            # [room for room in self.all_rooms if room.room_type.lower() == "office"]
-        # for office in office_rooms:
-        #     if not office.fully_occupied:
-        #         office.add_person_to_room(person)
-        #         person.has_office = True
-        #         rooms.append({"office": office.room_name})
-        #         print(
-        #             colorful.green(
-        #                 "{0} has been allocated the office {1}".format(
-        #                     first_name,
-        #                     office.room_name)))
-        #         break
-        # if not person.has_office:
-        #     print(
-        #         colorful.red(
-        #             "Sorry, there are no more office rooms for {0} to occupy.".format(first_name)))
         # Assign person living_space
         if wants_accommodation == "Y" and person_type.lower() == "fellow":
             accommodation_rooms = [
@@ -158,24 +140,6 @@ class Dojo(object):
                         .format(first_name)))
         person.rooms_occupied = rooms
         return {"Person": person.first_name + " " + person.last_name, "Rooms": rooms}
-
-    def create_person(self, first_name, last_name, person_type):
-        """create_person
-        """
-
-        person_id = len(self.all_people) + 1 # Generate person_id
-        if not first_name.isalpha() or not last_name.isalpha():
-            print(colorful.orange("Name should only contain alphabetic characters. \
-                Please rectify and try again"))
-            return False
-        person = Staff(first_name, last_name, person_id) \
-            if person_type.lower() == "staff" else Fellow(
-                first_name, last_name, wants_accommodation, person_id)
-        print(colorful.green(
-            "{0} {1} {2} has been successfully added"
-            .format(person_type, first_name, last_name)))
-        self.all_people.append(person)
-        return person
 
     def print_room(self, room_name):
         """ print_room
