@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/EdwinKato/Space-Allocator.svg?branch=master)](https://travis-ci.org/EdwinKato/Space-Allocator)
+
 # Space Allocator
 
 A simple python command line application to manage and allocate office and living space to new people joining the
