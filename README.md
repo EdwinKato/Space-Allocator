@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/EdwinKato/Space-Allocator.svg?branch=master)](https://travis-ci.org/EdwinKato/Space-Allocator)
+[![Coverage Status](https://coveralls.io/repos/github/EdwinKato/Space-Allocator/badge.svg?branch=master)](https://coveralls.io/github/EdwinKato/Space-Allocator?branch=master)
 
 # Space Allocator
 
