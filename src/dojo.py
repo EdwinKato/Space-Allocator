@@ -13,6 +13,7 @@ Attributes:
 """
 
 import sqlite3
+import random
 import colorful
 from prettytable import PrettyTable
 from .living_space import LivingSpace
@@ -88,7 +89,7 @@ class Dojo(object):
 
         person_id = len(self.all_people) + 1 # Generate person_id
         if not first_name.isalpha() or not last_name.isalpha():
-            print(colorful.orange("Name should only contain alphabetic characters. \
+            print(colorful.orange("Name should only contain alphabetic characters.\
                 Please rectify and try again"))
             return
         person = Staff(first_name, last_name, person_id) \
@@ -100,22 +101,41 @@ class Dojo(object):
         self.all_people.append(person)
         # Assign office to person
         office_rooms = \
-            [room for room in self.all_rooms if room.room_type.lower() == "office"]
-        for office in office_rooms:
-            if not office.fully_occupied:
-                office.add_person_to_room(person)
-                person.has_office = True
-                rooms.append({"office": office.room_name})
-                print(
-                    colorful.green(
-                        "{0} has been allocated the office {1}".format(
-                            first_name,
-                            office.room_name)))
-                break
-        if not person.has_office:
+            [room for room in self.all_rooms if room.room_type.lower() == "office"\
+            and not room.fully_occupied]
+        # chosen_room = random.choice(office_rooms)
+        if office_rooms:
+            chosen_room = random.choice(office_rooms)
+            chosen_room.add_person_to_room(person)
+            person.has_office = True
+            rooms.append({"office": chosen_room.room_name})
+            print(
+                colorful.green(
+                    "{0} has been allocated the office {1}".format(
+                        first_name,
+                        chosen_room.room_name)))
+        else:
             print(
                 colorful.red(
                     "Sorry, there are no more office rooms for {0} to occupy.".format(first_name)))
+
+        # office_rooms = \
+            # [room for room in self.all_rooms if room.room_type.lower() == "office"]
+        # for office in office_rooms:
+        #     if not office.fully_occupied:
+        #         office.add_person_to_room(person)
+        #         person.has_office = True
+        #         rooms.append({"office": office.room_name})
+        #         print(
+        #             colorful.green(
+        #                 "{0} has been allocated the office {1}".format(
+        #                     first_name,
+        #                     office.room_name)))
+        #         break
+        # if not person.has_office:
+        #     print(
+        #         colorful.red(
+        #             "Sorry, there are no more office rooms for {0} to occupy.".format(first_name)))
         # Assign person living_space
         if wants_accommodation == "Y" and person_type.lower() == "fellow":
             accommodation_rooms = [
