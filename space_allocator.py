@@ -27,21 +27,23 @@ from src.dojo import Dojo
 
 dojo = Dojo()
 
+
 def docopt_cmd(func):
     """
     This decorator is used to simplify the try/except block and pass the result
     of the docopt parsing to the called action.
     """
+
     def fn(self, arg):
         try:
             opt = docopt(fn.__doc__, arg)
 
-        except DocoptExit as e:
+        except DocoptExit as exception:
             # The DocoptExit is thrown when the args do not match.
             # We print a message to the user and the usage block.
 
             print('Invalid Command!')
-            print(e)
+            print(exception)
             return
 
         except SystemExit:
@@ -59,8 +61,9 @@ def docopt_cmd(func):
 
 
 class SpaceAllocator (cmd.Cmd):
-    intro = colorful.bold_green('Welcome to my Space Allocator!\n' \
-        + ' (Please type help for a list of commands and guidance.)')
+    intro = colorful.bold_green(
+        'Welcome to my Space Allocator!\n' +
+        ' (Please type help for a list of commands and guidance.)')
     prompt = '(space_allocator) '
     file = None
 
@@ -72,16 +75,28 @@ class SpaceAllocator (cmd.Cmd):
             dojo.create_room(arg['<room_type>'], room_name)
 
     def default(self, line):
-        print(colorful.bold_orange('The command ' + line.lower() + ' is not recognized.' \
-            + ' (Please enter another command or type help for list of available commands and their usage.)'))
+        print(
+            colorful.bold_orange(
+                'The command ' +
+                line.lower() +
+                ' is not recognized.' +
+                ' (Please enter another command or type help for \
+                list of available commands and their usage.)'))
 
     @docopt_cmd
     def do_add_person(self, arg):
         """Usage: add_person <first_name> <last_name> <person_type> [<wants_accommodation>]"""
         if arg['<wants_accommodation>'] is None:
-            dojo.add_person(arg['<first_name>'], arg['<last_name>'], arg['<person_type>'])
+            dojo.add_person(
+                arg['<first_name>'],
+                arg['<last_name>'],
+                arg['<person_type>'])
         else:
-            dojo.add_person(arg['<first_name>'], arg['<last_name>'], arg['<person_type>'], arg['<wants_accommodation>'])
+            dojo.add_person(
+                arg['<first_name>'],
+                arg['<last_name>'],
+                arg['<person_type>'],
+                arg['<wants_accommodation>'])
 
     @docopt_cmd
     def do_print_room(self, arg):
@@ -99,7 +114,7 @@ class SpaceAllocator (cmd.Cmd):
             if arg['--table'] is None:
                 dojo.print_allocations()
             else:
-                dojo.print_allocations(print_table = "Y")
+                dojo.print_allocations(print_table="Y")
 
     @docopt_cmd
     def do_print_unallocated(self, arg):
@@ -114,7 +129,8 @@ class SpaceAllocator (cmd.Cmd):
     def do_reallocate_person(self, arg):
         """Usage: reallocate_person <person_identifier> <new_room_name>"""
 
-        dojo.reallocate_person(int(arg['<person_identifier>']), arg['<new_room_name>'])
+        dojo.reallocate_person(
+            int(arg['<person_identifier>']), arg['<new_room_name>'])
 
     @docopt_cmd
     def do_load_people(self, arg):
@@ -145,6 +161,7 @@ class SpaceAllocator (cmd.Cmd):
 
         print('Good Bye!')
         exit()
+
 
 opt = docopt(__doc__, sys.argv[1:])
 
