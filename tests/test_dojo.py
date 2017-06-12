@@ -112,12 +112,19 @@ class TestSpaceAllocator(unittest.TestCase):
     def test_transfer_of_person_on_reallocate(self):
         """Tests that correct information is printed on print_allocations"""
 
-        self.dojo.create_room("office", "orange")
-        self.dojo.add_person("Neil", "Armstrong", "Staff", "Y")
-        result1 = self.dojo.print_room("testoffice")
+        dojo = Dojo()
+        test_office = dojo.create_room("office", "testoffice")
+        another_test_office = dojo.create_room("office", "orange")
+        dojo.add_person("Neil", "Armstrong", "Staff", "Y")
+        person = dojo.all_people[0]
+        old_office = [elem['office']\
+            for elem in person.rooms_occupied if 'office' in elem]
+        result1 = dojo.print_room(old_office[0])
         self.assertIn("Neil Armstrong", result1)
-        self.dojo.reallocate_person(1, "orange")
-        result2 = self.dojo.print_room("testoffice")
+        un_occupied_room = test_office if not test_office.residents else another_test_office
+        print(un_occupied_room.room_name)
+        dojo.reallocate_person(1, un_occupied_room.room_name)
+        result2 = dojo.print_room(old_office[0])
         self.assertNotIn("Neil Armstrong", result2)
 
     def test_output_of_print_allocations(self):
@@ -226,8 +233,14 @@ class TestSpaceAllocator(unittest.TestCase):
         self.dojo.create_room("office", "orange")
         self.dojo.create_room("living_space", "lion")
         self.dojo.add_person("John", "Ashaba", "Fellow", "Y")
-        result1 = self.dojo.print_room("testoffice")
-        result2 = self.dojo.print_room("testlivingspace")
+        person = self.dojo.all_people[0]
+        old_office = [elem['office']\
+            for elem in person.rooms_occupied if 'office' in elem]
+        old_living_space = [
+            elem['living_space'] \
+            for elem in person.rooms_occupied if 'living_space' in elem]
+        result1 = self.dojo.print_room(old_office[0])
+        result2 = self.dojo.print_room(old_living_space[0])
         self.assertIn("John Ashaba", result1)
         self.assertIn("John Ashaba", result2)
         self.dojo.reallocate_person(1, "orange")
