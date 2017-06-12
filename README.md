@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/EdwinKato/Space-Allocator.svg?branch=master)](https://travis-ci.org/EdwinKato/Space-Allocator)
 [![Coverage Status](https://coveralls.io/repos/github/EdwinKato/Space-Allocator/badge.svg?branch=master)](https://coveralls.io/github/EdwinKato/Space-Allocator?branch=master)
+[![PEP8](https://img.shields.io/badge/code%20style-pep8-orange.svg)](https://www.python.org/dev/peps/pep-0008/)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
 
 # Space Allocator
 
