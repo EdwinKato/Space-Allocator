@@ -1,12 +1,8 @@
-"""Class definition of class Person
-
-"""
+"""Class definition of class Person"""
 
 class Person(object):
     """ This class is responsible for managing people's data """
 
-    # def __init__(self, first_name, last_name, person_type,\
-        # wants_accommodation, person_id, has_living_space=None, has_office=None):
     def __init__(self, first_name, last_name, person_type,\
         wants_accommodation, person_id, has_living_space=None, has_office=None):
         self.first_name = first_name
