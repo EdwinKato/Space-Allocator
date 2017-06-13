@@ -42,7 +42,7 @@ as parameters where by room_name can be one or more values.
 ```
 create_room <room_type> <room_name>
 
-create_room office first_test_office
+create_room office firsttestoffice
 ```
 
 ### add_person
@@ -59,7 +59,7 @@ add_person Eden Hazard fellow Y
 Prints out the people in the room to the screen
 ```
 print_room <room_name>
-print_room first_test_office
+print_room firsttestoffice
 
 ```
 
@@ -91,7 +91,7 @@ Reallocate the person with person_identifier to new_room_name .
 
 ```
 reallocate_person <person_identifier> <new_room_name>
-reallocate_person 1 test_office
+reallocate_person 1 testoffice
 
 ```
 
@@ -130,7 +130,7 @@ Enables you to run tests on the different parts of the application to ensure tha
 Open the terminal and type in the command below to run tests on the program.
 Please remember to use the correct python installation on your system. Replace with ```python3``` if need be.
 ```
-python3 -m unittest tests/test_dojo.py
+python3 -m unittest tests/test_space_allocator.py
 ```
 
 ### Gather test coverage data

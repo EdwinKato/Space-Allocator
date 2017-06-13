@@ -64,6 +64,7 @@ class Dojo(object):
                     colorful.red(
                         "Room with name: {0} already exists. Please try using another name"
                         .format(room_name)))
+                break
         return created_rooms[0] if len(created_rooms) == 1 else created_rooms
 
     def add_person(
@@ -142,9 +143,7 @@ class Dojo(object):
         return {"Person": person.first_name + " " + person.last_name, "Rooms": rooms}
 
     def print_room(self, room_name):
-        """ print_room
-
-        """
+        """Prints all the people in a room """
 
         if room_name in [room.room_name for room in self.all_rooms]:
             output = "\n".join(self.find_room(room_name).get_people_in_room())
@@ -165,9 +164,7 @@ class Dojo(object):
             return []
 
     def print_allocations(self, file_name="", print_table="N"):
-        """ print_allocations
-
-        """
+        """Prints the people and respective rooms"""
 
         if print_table != "Y":
             rooms_people = []
@@ -179,8 +176,11 @@ class Dojo(object):
                 output = "Room: {0} \n ------------------------------------- \n{1}\n\n".format(
                     room.room_name, ",".join(people))
                 printed_output += output
-            if file_name == "":
-                print(colorful.blue(printed_output))
+            if not file_name:
+                if printed_output:
+                    print(colorful.blue(printed_output))
+                else:
+                    print(colorful.orange("There are no people allocated to any rooms at the moment"))
             else:
                 file = open(file_name, "w")
                 file.write(str(printed_output))
@@ -203,11 +203,11 @@ class Dojo(object):
                 print(
                     colorful.blue("List showing people with space and their respective rooms"))
                 print(colorful.blue(table))
+            else:
+                print(colorful.orange("There are no people allocated to any rooms at the moment"))
 
     def print_unallocated(self):
-        """print_unallocated
-
-        """
+        """Prints unallocated people along with the missing room type"""
 
         unallocated_people = []
         unallocated_table = PrettyTable(['Name', 'Person id', 'Missing'])

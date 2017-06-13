@@ -4,7 +4,7 @@ Usage:
     space_allocator create_room <room_type> <room_name>...
     space_allocator add_person <first_name> <last_name> <person_type> [<wants_accommodation>]
     space_allocator print_room <room_name>
-    space_allocator print_allocations [<file_name>] [--table]
+    space_allocator print_allocations [<file_name>] (-t | --table)
     space_allocator print_unallocated [<file_name>]
     space_allocator reallocate_person <person_identifier> <new_room_name>
     space_allocator load_people <file_name>
@@ -24,6 +24,8 @@ import cmd
 from docopt import docopt, DocoptExit
 import colorful
 from src.dojo import Dojo
+
+# space_allocator print_allocations [<file_name>] [--table]
 
 dojo = Dojo()
 
@@ -75,17 +77,19 @@ class SpaceAllocator (cmd.Cmd):
             dojo.create_room(arg['<room_type>'], room_name)
 
     def default(self, line):
-        print(
-            colorful.bold_orange(
-                'The command ' +
-                line.lower() +
-                ' is not recognized.' +
-                ' (Please enter another command or type help for \
-                list of available commands and their usage.)'))
+        """Defines the default message output for the incase he/she enters a wrong command"""
+
+        print(colorful.bold_orange(
+            'The command ' +
+            line.lower() +
+            ' is not recognized.' +
+            ' (Please enter another command or type help for \
+            list of available commands and their usage.)'))
 
     @docopt_cmd
     def do_add_person(self, arg):
         """Usage: add_person <first_name> <last_name> <person_type> [<wants_accommodation>]"""
+
         if arg['<wants_accommodation>'] is None:
             dojo.add_person(
                 arg['<first_name>'],
@@ -111,10 +115,11 @@ class SpaceAllocator (cmd.Cmd):
         if arg['<file_name>'] is not None:
             dojo.print_allocations(arg['<file_name>'])
         else:
-            if arg['--table'] is None:
-                dojo.print_allocations()
-            else:
+            if arg['--table']:
                 dojo.print_allocations(print_table="Y")
+            else:
+                # dojo.print_allocations(print_table="Y")
+                dojo.print_allocations(print_table="N")
 
     @docopt_cmd
     def do_print_unallocated(self, arg):
