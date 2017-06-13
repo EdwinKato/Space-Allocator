@@ -237,24 +237,19 @@ class Dojo(object):
         print(colorful.blue("Table showing people along with missing rooms"))
         print(colorful.blue(unallocated_table))
 
-    # TODO Cater for Room not found
     def find_room(self, room_name):
-        """find_room
-        """
+        """Takes in the room name and returns the room"""
 
         return [room for room in self.all_rooms if room_name == room.room_name][0]
 
-    # TODO Cater for Person not found
     def find_person(self, person_id):
-        """find_person
-        """
+        """Takes in the person_id and returns the person"""
 
         return [person for person in self.all_people if person_id ==
                 person.person_id][0]
 
     def load_people(self, file):
-        """load_people
-        """
+        """Loads the people from the text file to the system"""
 
         file = open(file, "r")
         for line in file:
@@ -270,8 +265,7 @@ class Dojo(object):
         file.close()
 
     def reallocate_person(self, person_id, new_room_name):
-        """reallocate_person
-        """
+        """Reallocates person from one room to another"""
 
         if person_id in [person.person_id for person in self.all_people]:
             person = self.find_person(person_id)
@@ -364,8 +358,7 @@ class Dojo(object):
                     " does not exist in the system. Please change id and try again"))
 
     def save_state(self, db_file=""):
-        """save_state
-        """
+        """Saves all the data in the system to a file specified"""
 
         connection = sqlite3.connect(
             ":memory:") if db_file == "" else sqlite3.connect(db_file)
@@ -427,8 +420,7 @@ class Dojo(object):
         connection.close()
 
     def load_state(self, db_file=""):
-        """load_state
-        """
+        """Loads application data from a db file to the application"""
 
         connection = sqlite3.connect(
             ":memory:") if db_file == "" else sqlite3.connect(db_file)
