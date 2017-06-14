@@ -18,7 +18,7 @@ class TestSpaceAllocator(unittest.TestCase):
         self.testoffice = self.dojo.create_room("office", "testoffice")
         self.testlivingspace = self.dojo.create_room("living_space", "testlivingspace")
 
-    def test_create_room_successfully(self):
+    def test_create_room(self):
         """Tests that a room is created successfully"""
 
         initial_room_count = len(self.dojo.all_rooms)
@@ -27,7 +27,7 @@ class TestSpaceAllocator(unittest.TestCase):
         new_room_count = len(self.dojo.all_rooms)
         self.assertEqual(new_room_count - initial_room_count, 1)
 
-    def test_create_rooms_successfully(self):
+    def test_create_room_multiple(self):
         """Tests that multiple rooms are created at a single time successfully"""
 
         initial_room_count = len(self.dojo.all_rooms)
@@ -36,7 +36,7 @@ class TestSpaceAllocator(unittest.TestCase):
         new_room_count = len(self.dojo.all_rooms)
         self.assertEqual(new_room_count - initial_room_count, 3)
 
-    def test_create_duplicate_rooms(self):
+    def test_create_room_duplicate(self):
         """Tests that duplicate rooms are not created"""
 
         initial_room_count = len(self.dojo.all_people)
@@ -44,7 +44,7 @@ class TestSpaceAllocator(unittest.TestCase):
         new_room_count = len(self.dojo.all_people)
         self.assertEqual(new_room_count - initial_room_count, 0)
 
-    def test_add_person_to_system(self):
+    def test_add_person(self):
         """Test that person is added to the system"""
 
         initial_person_count = len(self.dojo.all_people)
@@ -53,14 +53,14 @@ class TestSpaceAllocator(unittest.TestCase):
         new_person_count = len(self.dojo.all_people)
         self.assertEqual(new_person_count - initial_person_count, 1)
 
-    def test_assign_office_to_person(self):
+    def test_add_person_has_oofice(self):
         """Test that a person is assigned an office"""
 
         person = self.dojo.add_person("Neil", "Armstrong", "Staff")
         self.assertTrue(person)
         self.assertTrue(self.dojo.all_people[-1].has_office)
 
-    def test_assign_living_space_to_person(self):
+    def test_add_person_has_living_space(self):
         """Test that person is assigned a living space"""
 
         person = self.dojo.add_person("Eden", "Hazard", "Fellow", "Y")
@@ -75,7 +75,7 @@ class TestSpaceAllocator(unittest.TestCase):
             {'Person': 'Eden Hazard', 'Rooms': [{'office': 'testoffice'}, \
             {'living_space': 'testlivingspace'}]}, person)
 
-    def test_that_maximum_no_of_people_is_not_exceeded(self):
+    def test_add_person_maximum(self):
         """Tests that the maximum number of people is not exceeded"""
 
         self.dojo.add_person("Neil", "Armstrong", "Staff", "Y")
@@ -89,7 +89,7 @@ class TestSpaceAllocator(unittest.TestCase):
         self.dojo.add_person("Tibaut", "Courtois", "Fellow", "Y")
         self.assertEqual(len(self.testoffice.residents), 6)
 
-    def test_print_room_output(self):
+    def test_print_room(self):
         """Tests the output of print_room"""
 
         self.dojo.add_person("Neil", "Armstrong", "Staff", "Y")
@@ -109,7 +109,7 @@ class TestSpaceAllocator(unittest.TestCase):
             'Eric Dier', 'Dele Ali'], result)
         self.assertFalse(non_existent_room)
 
-    def test_transfer_of_person_on_reallocate(self):
+    def test_reallocate_person(self):
         """Tests that correct information is printed on print_allocations"""
 
         dojo = Dojo()
@@ -127,7 +127,7 @@ class TestSpaceAllocator(unittest.TestCase):
         result2 = dojo.print_room(old_office[0])
         self.assertNotIn("Neil Armstrong", result2)
 
-    def test_output_of_print_allocations(self):
+    def test_print_allocations(self):
         """Tests the output of print_allocations"""
 
         self.dojo.add_person("Dele", "Ali", "Fellow", "Y")
@@ -149,7 +149,7 @@ class TestSpaceAllocator(unittest.TestCase):
         self.assertEqual(
             [{'testoffice': ['DELE ALI']}, {'testlivingspace': ['DELE ALI']}], result)
 
-    def test_tabular_output_on_print_allocations(self):
+    def test_print_allocations_tabular_view(self):
         """Tests that tabular data is output on print_allocations"""
 
         #Create StringIO object and redirect output
@@ -171,7 +171,7 @@ class TestSpaceAllocator(unittest.TestCase):
         self.assertTrue(
             captured_output.getvalue().strip() in program_captured_output.getvalue().strip())
 
-    def test_tabular_output_on_print_unallocated(self):
+    def test_print_unallocated_tabular(self):
         """Tests that tabular data is output on test_tabular_output_on_print_unallocated"""
 
         dojo = Dojo()
@@ -198,7 +198,7 @@ class TestSpaceAllocator(unittest.TestCase):
         self.assertTrue(
             captured_output.getvalue().strip() in program_captured_output.getvalue().strip())
 
-    def test_reallocate_if_person_had_no_office(self):
+    def test_reallocate_person_no_office(self):
         """Tests reallocate if person had no office"""
 
         dojo = Dojo()
@@ -209,7 +209,7 @@ class TestSpaceAllocator(unittest.TestCase):
         person = dojo.find_person(1)
         self.assertIn(person, target_room.residents)
 
-    def test_reallocate_if_person_had_no_living_space(self):
+    def test_reallocate_person_no_living_space(self):
         """Tests reallocate if person had no living space"""
 
         self.dojo.add_person("John", "Ashaba", "Staff", "Y")
@@ -219,7 +219,7 @@ class TestSpaceAllocator(unittest.TestCase):
         person = self.dojo.find_person(1)
         self.assertIn(person, target_room.residents)
 
-    def test_that_person_exists_after_load_people(self):
+    def test_load_people(self):
         """Tests that person exists after load_people"""
 
         self.dojo.load_people("resources/people.txt")
