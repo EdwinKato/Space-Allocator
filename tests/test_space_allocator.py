@@ -6,6 +6,7 @@ from prettytable import PrettyTable
 from src.dojo import Dojo
 import sys
 import unittest
+import os
 
 class TestSpaceAllocator(unittest.TestCase):
     """ Tests"""
@@ -221,7 +222,7 @@ class TestSpaceAllocator(unittest.TestCase):
     def test_that_person_exists_after_load_people(self):
         """Tests that person exists after load_people"""
 
-        self.dojo.load_people("people.txt")
+        self.dojo.load_people("resources/people.txt")
         last_person = self.dojo.find_person(7)
         self.assertIn(last_person, self.dojo.all_people)
 
@@ -255,8 +256,10 @@ class TestSpaceAllocator(unittest.TestCase):
         dojo1 = Dojo()
         dojo1.create_room("office", "orange")
         dojo1.add_person("John", "Ashaba", "Staff", "Y")
-        dojo1.save_state("mydb.db")
+        if os.path.exists("resources/testdb.db"):
+            os.remove("resources/testdb.db")
+        dojo1.save_state("testdb.db")
         dojo2 = Dojo()
-        dojo2.load_state("mydb.db")
+        dojo2.load_state("resources/testdb.db")
         room = dojo2.find_room("orange")
         self.assertIn(room, dojo2.all_rooms)

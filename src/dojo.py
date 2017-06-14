@@ -53,7 +53,7 @@ class Dojo(object):
                     print("room name input must be string alphabet type")
                     return
                 room = Office(
-                    room_name) if room_type is "office" else LivingSpace(room_name)
+                    room_name) if room_type.lower() == "office" else LivingSpace(room_name)
                 self.all_rooms.append(room)
                 created_rooms.append(room)
                 print(
@@ -102,7 +102,8 @@ class Dojo(object):
         self.all_people.append(person)
         # Assign office to person
         office_rooms = \
-            [room for room in self.all_rooms if room.room_type.lower() == "office" and not room.fully_occupied]
+            [room for room in self.all_rooms if room.room_type.lower() == "office"\
+                and not room.fully_occupied]
         # chosen_room = random.choice(office_rooms)
         if office_rooms:
             chosen_room = random.choice(office_rooms)
@@ -185,7 +186,7 @@ class Dojo(object):
                 else:
                     print(colorful.orange("There are no people allocated to any rooms at the moment"))
             else:
-                file = open(file_name, "w")
+                file = open("resources/" + file_name, "w")
                 file.write(str(printed_output))
                 file.close()
             return rooms_people
@@ -366,8 +367,7 @@ class Dojo(object):
     def save_state(self, db_file=None):
         """Saves all the data in the system to a file specified"""
 
-        connection = sqlite3.connect(
-            ":memory:") if not db_file else sqlite3.connect(db_file)
+        connection = sqlite3.connect(":memory:") if not db_file else sqlite3.connect("resources/" + db_file)
         cursor = connection.cursor()
 
         # Create Room table
