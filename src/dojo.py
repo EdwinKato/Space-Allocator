@@ -196,11 +196,11 @@ class Dojo(object):
                 table = PrettyTable(['Name', 'Type', 'Office', 'Living Space'])
                 for person in allocated_people:
                     office_name, living_space_name = "Not Assigned", "Not Assigned"
-                    for i in range(0, len(person.rooms_occupied)):
-                        if "office" in person.rooms_occupied[i]:
-                            office_name = person.rooms_occupied[i]['office']
-                        if "living_space" in person.rooms_occupied[i]:
-                            living_space_name = person.rooms_occupied[i]['living_space']
+                    for room_occupied in range(0, len(person.rooms_occupied)):
+                        if "office" in person.rooms_occupied[room_occupied]:
+                            office_name = person.rooms_occupied[room_occupied]['office']
+                        if "living_space" in person.rooms_occupied[room_occupied]:
+                            living_space_name = person.rooms_occupied[room_occupied]['living_space']
                     table.add_row(
                         [person.get_fullname(), person.person_type, office_name, living_space_name])
                 print(
@@ -409,13 +409,13 @@ class Dojo(object):
         # Save room_person data
         room_person_data = []
         for person in self.all_people:
-            for i in range(0, len(person.rooms_occupied)):
-                if "office" in person.rooms_occupied[i]:
+            for room_occupied in range(0, len(person.rooms_occupied)):
+                if "office" in person.rooms_occupied[room_occupied]:
                     room_person_data.append(
-                        (person.person_id, person.rooms_occupied[i]['office'], "office"))
-                if "living_space" in person.rooms_occupied[i]:
+                        (person.person_id, person.rooms_occupied[room_occupied]['office'], "office"))
+                if "living_space" in person.rooms_occupied[room_occupied]:
                     room_person_data.append(
-                        (person.person_id, person.rooms_occupied[i]['living_space'], "living_space"))
+                        (person.person_id, person.rooms_occupied[room_occupied]['living_space'], "living_space"))
 
         cursor.executemany(
             "INSERT INTO room_person VALUES (?,?,?)",
