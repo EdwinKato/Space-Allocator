@@ -120,6 +120,9 @@ class Dojo(object):
                 colorful.red(
                     "Sorry, there are no more office rooms for {0} to occupy.".format(first_name)))
 
+        if wants_accommodation == "Y" and person_type.lower() == "staff":
+            print(colorful.red("Sorry, No living space has been allocated to you as these are only meant for fellows."))
+
         # Assign person living_space
         if wants_accommodation == "Y" and person_type.lower() == "fellow":
             accommodation_rooms = [
