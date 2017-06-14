@@ -21,7 +21,7 @@ class Room(object):
         self.room_type = room_type
         self.fully_occupied = None
 
-        if room_type == "office":
+        if room_type is "office":
             self.maximum_no_of_people = 6
         else:
             self.maximum_no_of_people = 4

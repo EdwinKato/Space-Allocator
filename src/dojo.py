@@ -53,7 +53,7 @@ class Dojo(object):
                     print("room name input must be string alphabet type")
                     return
                 room = Office(
-                    room_name) if room_type == "office" else LivingSpace(room_name)
+                    room_name) if room_type is "office" else LivingSpace(room_name)
                 self.all_rooms.append(room)
                 created_rooms.append(room)
                 print(
@@ -102,8 +102,7 @@ class Dojo(object):
         self.all_people.append(person)
         # Assign office to person
         office_rooms = \
-            [room for room in self.all_rooms if room.room_type.lower() == "office"\
-            and not room.fully_occupied]
+            [room for room in self.all_rooms if room.room_type.lower() == "office" and not room.fully_occupied]
         # chosen_room = random.choice(office_rooms)
         if office_rooms:
             chosen_room = random.choice(office_rooms)
@@ -120,13 +119,13 @@ class Dojo(object):
                 colorful.red(
                     "Sorry, there are no more office rooms for {0} to occupy.".format(first_name)))
 
-        if wants_accommodation == "Y" and person_type.lower() == "staff":
+        if wants_accommodation is "Y" and person_type.lower() == "staff":
             print(colorful.red("Sorry, No living space has been allocated to you as these are only meant for fellows."))
 
         # Assign person living_space
-        if wants_accommodation == "Y" and person_type.lower() == "fellow":
+        if wants_accommodation is "Y" and person_type.lower() == "fellow":
             accommodation_rooms = [
-                room for room in self.all_rooms if room.room_type == "living_space"]
+                room for room in self.all_rooms if room.room_type is "living_space"]
             for living_room in accommodation_rooms:
                 if not living_room.fully_occupied:
                     living_room.add_person_to_room(person)
@@ -170,7 +169,7 @@ class Dojo(object):
     def print_allocations(self, file_name="", print_table="N"):
         """Prints the people and respective rooms"""
 
-        if print_table != "Y":
+        if print_table is "N":
             rooms_people = []
             printed_output = ""
             for room in self.all_rooms:
@@ -216,7 +215,7 @@ class Dojo(object):
         unallocated_people = []
         unallocated_table = PrettyTable(['Name', 'Person id', 'Missing'])
         for person in self.all_people:
-            if person.wants_accommodation == "N":
+            if person.wants_accommodation is "N":
                 if not person.has_office:
                     unallocated_people.append(
                         {"Name": person.get_fullname(), "Missing": "Office"})
@@ -278,7 +277,7 @@ class Dojo(object):
             person = self.find_person(person_id)
             new_room = self.find_room(new_room_name)
             if not new_room.fully_occupied:
-                if new_room.room_type == "office":
+                if new_room.room_type is "office":
                     old_office = [elem['office']
                                   for elem in person.rooms_occupied if 'office' in elem]
                     if not old_office:
@@ -368,7 +367,7 @@ class Dojo(object):
         """Saves all the data in the system to a file specified"""
 
         connection = sqlite3.connect(
-            ":memory:") if db_file == "" else sqlite3.connect(db_file)
+            ":memory:") if not db_file else sqlite3.connect(db_file)
         cursor = connection.cursor()
 
         # Create Room table
@@ -430,7 +429,7 @@ class Dojo(object):
         """Loads application data from a db file to the application"""
 
         connection = sqlite3.connect(
-            ":memory:") if db_file == "" else sqlite3.connect(db_file)
+            ":memory:") if not db_file else sqlite3.connect(db_file)
         cursor = connection.cursor()
 
         try:
@@ -459,7 +458,7 @@ class Dojo(object):
                     last_name,
                     person_id,
                     has_living_space,
-                    has_office) if person_type == "Staff" else Fellow(
+                    has_office) if person_type is "Staff" else Fellow(
                         first_name,
                         last_name,
                         wants_accommodation,
