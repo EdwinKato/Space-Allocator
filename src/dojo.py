@@ -166,7 +166,7 @@ class Dojo(object):
                     " does not exist in the system. Please change name and try again!"))
             return []
 
-    def print_allocations(self, file_name="", print_table="N"):
+    def print_allocations(self, file_name=None, print_table="N"):
         """Prints the people and respective rooms"""
 
         if print_table is "N":
@@ -363,7 +363,7 @@ class Dojo(object):
                     person_id +
                     " does not exist in the system. Please change id and try again"))
 
-    def save_state(self, db_file=""):
+    def save_state(self, db_file=None):
         """Saves all the data in the system to a file specified"""
 
         connection = sqlite3.connect(
@@ -425,7 +425,7 @@ class Dojo(object):
         connection.commit()
         connection.close()
 
-    def load_state(self, db_file=""):
+    def load_state(self, db_file=None):
         """Loads application data from a db file to the application"""
 
         connection = sqlite3.connect(
