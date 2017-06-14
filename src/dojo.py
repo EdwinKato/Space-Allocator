@@ -15,6 +15,7 @@ Attributes:
 import sqlite3
 import random
 import colorful
+import os.path
 from prettytable import PrettyTable
 from .living_space import LivingSpace
 from .office import Office
@@ -251,18 +252,21 @@ class Dojo(object):
     def load_people(self, file):
         """Loads the people from the text file to the system"""
 
-        file = open(file, "r")
-        for line in file:
-            person_data = line.split()
-            if len(person_data) == 4:
-                self.add_person(
-                    person_data[0],
-                    person_data[1],
-                    person_data[2],
-                    person_data[3])
-            else:
-                self.add_person(person_data[0], person_data[1], person_data[2])
-        file.close()
+        if os.path.isfile(file):
+            file = open(file, "r")
+            for line in file:
+                person_data = line.split()
+                if len(person_data) == 4:
+                    self.add_person(
+                        person_data[0],
+                        person_data[1],
+                        person_data[2],
+                        person_data[3])
+                else:
+                    self.add_person(person_data[0], person_data[1], person_data[2])
+            file.close()
+        else:
+            print(colorful.red("File does not exist! Please specify another file"))
 
     def reallocate_person(self, person_id, new_room_name):
         """Reallocates person from one room to another"""
