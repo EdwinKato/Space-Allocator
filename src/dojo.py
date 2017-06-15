@@ -220,7 +220,7 @@ class Dojo(object):
                         if "living_space" in person.rooms_occupied[room_occupied]:
                             living_space_name = person.rooms_occupied[room_occupied]['living_space']
                     table.add_row(
-                        [person.get_fullname(), person.person_type, office_name, living_space_name])
+                        [person.get_fullname(), person._type, office_name, living_space_name])
                 print(
                     colorful.blue("List showing people with space and their respective rooms"))
                 print(colorful.blue(table))
@@ -238,23 +238,23 @@ class Dojo(object):
                     unallocated_people.append(
                         {"Name": person.get_fullname(), "Missing": "Office"})
                     unallocated_table.add_row(
-                        [person.get_fullname(), person.person_id, "Office"])
+                        [person.get_fullname(), person._id, "Office"])
             else:
                 if not person.has_office and not person.has_living_space:
                     unallocated_people.append(
                         {"Name": person.get_fullname(), "Missing": "Office and Living Space"})
                     unallocated_table.add_row(
-                        [person.get_fullname(), person.person_id, "Office and Living Space"])
+                        [person.get_fullname(), person._id, "Office and Living Space"])
                 elif not person.has_office and person.has_living_space:
                     unallocated_people.append(
                         {"Name": person.get_fullname(), "Missing": "Office"})
                     unallocated_table.add_row(
-                        [person.get_fullname(), person.person_id, "Office"])
+                        [person.get_fullname(), person._id, "Office"])
                 elif person.has_office and not person.has_living_space:
                     unallocated_people.append(
                         {"Name": person.get_fullname(), "Missing": "Living Space"})
                     unallocated_table.add_row(
-                        [person.get_fullname(), person.person_id, "Living Space"])
+                        [person.get_fullname(), person._id, "Living Space"])
         print(colorful.blue("Table showing people along with missing rooms"))
         print(colorful.blue(unallocated_table))
 
@@ -267,7 +267,7 @@ class Dojo(object):
         """Takes in the person_id and returns the person"""
 
         return [person for person in self.people if person_id ==
-                person.person_id][0]
+                person._id][0]
 
     def load_people(self, file):
         """Loads the people from the text file to the system"""
@@ -291,7 +291,7 @@ class Dojo(object):
     def reallocate_person(self, person_id, new_room_name):
         """Reallocates person from one room to another"""
 
-        if person_id in [person.person_id for person in self.people]:
+        if person_id in [person._id for person in self.people]:
             person = self.find_person(person_id)
             new_room = self.find_room(new_room_name)
             if not new_room.fully_occupied:
@@ -408,10 +408,10 @@ class Dojo(object):
         person_data = []
         for person in self.people:
             person_data.append(
-                (person.person_id,
+                (person._id,
                  person.first_name,
                  person.last_name,
-                 person.person_type,
+                 person._type,
                  person.has_living_space,
                  person.has_office,
                  person.wants_accommodation))
@@ -429,10 +429,10 @@ class Dojo(object):
             for room_occupied in range(0, len(person.rooms_occupied)):
                 if "office" in person.rooms_occupied[room_occupied]:
                     room_person_data.append(
-                        (person.person_id, person.rooms_occupied[room_occupied]['office'], "office"))
+                        (person._id, person.rooms_occupied[room_occupied]['office'], "office"))
                 if "living_space" in person.rooms_occupied[room_occupied]:
                     room_person_data.append(
-                        (person.person_id, person.rooms_occupied[room_occupied]['living_space'], "living_space"))
+                        (person._id, person.rooms_occupied[room_occupied]['living_space'], "living_space"))
 
         cursor.executemany(
             "INSERT INTO room_person VALUES (?,?,?)",
