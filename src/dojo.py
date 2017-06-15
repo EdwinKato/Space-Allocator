@@ -47,7 +47,7 @@ class Dojo(object):
 
         for room_name in room_names:
             # Check if room_name exists in the already created rooms
-            if room_name not in [room.room_name for room in self.rooms]:
+            if room_name not in [room.name for room in self.rooms]:
                 # Check that room_name contains only alphabetic characters
                 if not room_name.isalpha():
                     print("room name input must be string alphabet type")
@@ -102,19 +102,19 @@ class Dojo(object):
         self.people.append(person)
         # Assign office to person
         office_rooms = \
-            [room for room in self.rooms if room.room_type.lower() == "office"\
+            [room for room in self.rooms if room._type.lower() == "office"\
                 and not room.fully_occupied]
         # chosen_room = random.choice(office_rooms)
         if office_rooms:
             chosen_room = random.choice(office_rooms)
-            chosen_room.add_person_to_room(person)
+            self.add_person_to_room(person, chosen_room)
             person.has_office = True
-            rooms.append({"office": chosen_room.room_name})
+            rooms.append({"office": chosen_room.name})
             print(
                 colorful.green(
                     "{0} has been allocated the office {1}".format(
                         first_name,
-                        chosen_room.room_name)))
+                        chosen_room.name)))
         else:
             print(
                 colorful.red(
@@ -126,17 +126,17 @@ class Dojo(object):
         # Assign person living_space
         if wants_accommodation is "Y" and person_type.lower() == "fellow":
             accommodation_rooms = [
-                room for room in self.rooms if room.room_type is "living_space"]
+                room for room in self.rooms if room._type is "living_space"]
             for living_room in accommodation_rooms:
                 if not living_room.fully_occupied:
-                    living_room.add_person_to_room(person)
+                    self.add_person_to_room(person, living_room)
                     person.has_living_space = True
-                    rooms.append({"living_space": living_room.room_name})
+                    rooms.append({"living_space": living_room.name})
                     print(
                         colorful.green(
                             "{0} has been allocated the living space {1}".format(
                                 first_name,
-                                living_room.room_name)))
+                                living_room.name)))
                     break
             if not person.has_living_space:
                 print(
@@ -146,11 +146,28 @@ class Dojo(object):
         person.rooms_occupied = rooms
         return {"Person": person.first_name + " " + person.last_name, "Rooms": rooms}
 
+    def add_person_to_room(self, person, room):
+        """ Add person to room
+
+        Args:
+            person (Person): Person to be added to room
+            room (Room): Room to which person is to be added
+
+        """
+
+        if len(room.residents) <= room.maximum_no_of_people:
+            room.residents.append(person)
+            if len(room.residents) == room.maximum_no_of_people:
+                room.fully_occupied = True
+            return True
+        else:
+            return False
+
     def print_room(self, room_name):
         """Prints all the people in a room """
 
-        if room_name in [room.room_name for room in self.rooms]:
-            output = "\n".join(self.find_room(room_name).get_people_in_room())
+        if room_name in [room.name for room in self.rooms]:
+            output = "\n".join(self.find_room(room_name).get_residents())
             print(
                 colorful.blue(
                     "People in Room: " + room_name +
@@ -158,8 +175,8 @@ class Dojo(object):
             print(
                 colorful.blue(
                     ", ".join(
-                        self.find_room(room_name).get_people_in_room())))
-            return self.find_room(room_name).get_people_in_room()
+                        self.find_room(room_name).get_residents())))
+            return self.find_room(room_name).get_residents()
         else:
             print(
                 colorful.red(
@@ -176,9 +193,9 @@ class Dojo(object):
             for room in self.rooms:
                 people = [(person.get_fullname()).upper()
                           for person in room.residents]
-                rooms_people.append({room.room_name: people})
+                rooms_people.append({room.name: people})
                 output = "Room: {0} \n ------------------------------------- \n{1}\n\n".format(
-                    room.room_name, ",".join(people))
+                    room.name, ",".join(people))
                 printed_output += output
             if not file_name:
                 if printed_output:
@@ -244,7 +261,7 @@ class Dojo(object):
     def find_room(self, room_name):
         """Takes in the room name and returns the room"""
 
-        return [room for room in self.rooms if room_name == room.room_name][0]
+        return [room for room in self.rooms if room_name == room.name][0]
 
     def find_person(self, person_id):
         """Takes in the person_id and returns the person"""
@@ -278,31 +295,31 @@ class Dojo(object):
             person = self.find_person(person_id)
             new_room = self.find_room(new_room_name)
             if not new_room.fully_occupied:
-                if new_room.room_type is "office":
+                if new_room._type is "office":
                     old_office = [elem['office']
                                   for elem in person.rooms_occupied if 'office' in elem]
                     if not old_office:
-                        new_room.add_person_to_room(person)
+                        self.add_person_to_room(person, new_room)
                         person.rooms_occupied.append({'office': new_room_name})
                         person.has_office = True
                         print(colorful.green(
                             person.get_fullname().capitalize() +
                             " has been assigned to room " +
-                            new_room.room_name))
+                            new_room.name))
                     else:
                         current_room = self.find_room(old_office[0])
-                        if current_room.room_name == new_room_name:
+                        if current_room.name == new_room_name:
                             print(colorful.red(
                                 "Can not reallocate to the same room. \
                                 Please specify another room name and try again!"))
                             return
-                        if new_room.room_type != current_room.room_type:
+                        if new_room._type != current_room._type:
                             print(colorful.red(
                                 "Can not reallocate to different room type. \
                                 Please specify another type and try again!"))
                             return
-                        current_room.remove_person_from_room(person)
-                        new_room.add_person_to_room(person)
+                        current_room.remove_person(person)
+                        self.add_person_to_room(person, new_room)
                         for elem in person.rooms_occupied:
                             if 'office' in elem:
                                 elem['office'] = new_room_name
@@ -317,7 +334,7 @@ class Dojo(object):
                         elem['living_space'] \
                         for elem in person.rooms_occupied if 'living_space' in elem]
                     if not old_living_space:
-                        new_room.add_person_to_room(person)
+                        self.add_person_to_room(person, new_room)
                         person.rooms_occupied.append(
                             {'living_space': new_room_name})
                         person.has_living_space = True
@@ -325,23 +342,23 @@ class Dojo(object):
                             colorful.green(
                                 person.get_fullname().capitalize() +
                                 " has been assigned to room " +
-                                new_room.room_name))
+                                new_room.name))
                     else:
                         current_room = self.find_room(old_living_space[0])
                         # current_room = self.find_room(
                             # person.rooms_occupied[i]['living_space'])
-                        if current_room.room_name == new_room_name:
+                        if current_room.name == new_room_name:
                             print(colorful.red(
                                 "Can not reallocate to the same room. \
                                 Please specify room name and try again."))
                             return
-                        if new_room.room_type != current_room.room_type:
+                        if new_room._type != current_room._type:
                             print(colorful.red(
                                 "Can not reallocate to different room type. \
                                 Please specify another type and try again."))
                             return
-                        current_room.remove_person_from_room(person)
-                        new_room.add_person_to_room(person)
+                        current_room.remove_person(person)
+                        self.add_person_to_room(person, new_room)
                         for elem in person.rooms_occupied:
                             if 'living_space' in elem:
                                 elem['living_space'] = new_room_name
@@ -355,7 +372,7 @@ class Dojo(object):
                 print(
                     colorful.red(
                         "Room: " +
-                        new_room.room_name +
+                        new_room.name +
                         "is fully occupied. Please change room and try again"))
         else:
             print(
@@ -378,7 +395,7 @@ class Dojo(object):
         room_data = []
         for room in self.rooms:
             room_data.append(
-                (room.room_name, room.room_type, room.fully_occupied))
+                (room.name, room._type, room.fully_occupied))
         cursor.executemany("INSERT INTO room VALUES (?,?,?)", room_data)
 
         # Create Person table

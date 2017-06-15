@@ -122,8 +122,8 @@ class TestSpaceAllocator(unittest.TestCase):
         result1 = dojo.print_room(old_office[0])
         self.assertIn("Neil Armstrong", result1)
         un_occupied_room = test_office if not test_office.residents else another_test_office
-        print(un_occupied_room.room_name)
-        dojo.reallocate_person(1, un_occupied_room.room_name)
+        print(un_occupied_room.name)
+        dojo.reallocate_person(1, un_occupied_room.name)
         result2 = dojo.print_room(old_office[0])
         self.assertNotIn("Neil Armstrong", result2)
 
