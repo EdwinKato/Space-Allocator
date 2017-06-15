@@ -1,12 +1,14 @@
 """Unit tests for the application"""
 
-import colorful
 import io
-from prettytable import PrettyTable
-from src.dojo import Dojo
+import os
 import sys
 import unittest
-import os
+
+import colorful
+from prettytable import PrettyTable
+
+from src.dojo import Dojo
 from src.helpers import get_residents, remove_person, find_room, find_person
 
 

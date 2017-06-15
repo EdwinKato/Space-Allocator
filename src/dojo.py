@@ -12,9 +12,10 @@ Attributes:
     people (Person[]) Contains a list of all people in the system
 """
 
-import sqlite3
 import random
+import sqlite3
 import os.path
+
 import colorful
 from prettytable import PrettyTable
 
