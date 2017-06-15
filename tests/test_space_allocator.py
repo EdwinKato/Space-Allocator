@@ -21,36 +21,36 @@ class TestSpaceAllocator(unittest.TestCase):
     def test_create_room(self):
         """Tests that a room is created successfully"""
 
-        initial_room_count = len(self.dojo.all_rooms)
+        initial_room_count = len(self.dojo.rooms)
         blue_office = self.dojo.create_room("office", "Blue")
         self.assertTrue(blue_office)
-        new_room_count = len(self.dojo.all_rooms)
+        new_room_count = len(self.dojo.rooms)
         self.assertEqual(new_room_count - initial_room_count, 1)
 
     def test_create_room_multiple(self):
         """Tests that multiple rooms are created at a single time successfully"""
 
-        initial_room_count = len(self.dojo.all_rooms)
+        initial_room_count = len(self.dojo.rooms)
         offices = self.dojo.create_room("office", "Blue", "Black", "Brown")
         self.assertTrue(offices)
-        new_room_count = len(self.dojo.all_rooms)
+        new_room_count = len(self.dojo.rooms)
         self.assertEqual(new_room_count - initial_room_count, 3)
 
     def test_create_room_duplicate(self):
         """Tests that duplicate rooms are not created"""
 
-        initial_room_count = len(self.dojo.all_people)
+        initial_room_count = len(self.dojo.people)
         self.testoffice = self.dojo.create_room("office", "testoffice")
-        new_room_count = len(self.dojo.all_people)
+        new_room_count = len(self.dojo.people)
         self.assertEqual(new_room_count - initial_room_count, 0)
 
     def test_add_person(self):
         """Test that person is added to the system"""
 
-        initial_person_count = len(self.dojo.all_people)
+        initial_person_count = len(self.dojo.people)
         person = self.dojo.add_person("Neil", "Armstrong", "Staff")
         self.assertTrue(person)
-        new_person_count = len(self.dojo.all_people)
+        new_person_count = len(self.dojo.people)
         self.assertEqual(new_person_count - initial_person_count, 1)
 
     def test_add_person_has_oofice(self):
@@ -58,14 +58,14 @@ class TestSpaceAllocator(unittest.TestCase):
 
         person = self.dojo.add_person("Neil", "Armstrong", "Staff")
         self.assertTrue(person)
-        self.assertTrue(self.dojo.all_people[-1].has_office)
+        self.assertTrue(self.dojo.people[-1].has_office)
 
     def test_add_person_has_living_space(self):
         """Test that person is assigned a living space"""
 
         person = self.dojo.add_person("Eden", "Hazard", "Fellow", "Y")
         self.assertTrue(person)
-        self.assertTrue(self.dojo.all_people[-1].has_living_space)
+        self.assertTrue(self.dojo.people[-1].has_living_space)
 
     def test_add_person_return_type(self):
         """Tests the return type of method add_person"""
@@ -116,7 +116,7 @@ class TestSpaceAllocator(unittest.TestCase):
         test_office = dojo.create_room("office", "testoffice")
         another_test_office = dojo.create_room("office", "orange")
         dojo.add_person("Neil", "Armstrong", "Staff", "Y")
-        person = dojo.all_people[0]
+        person = dojo.people[0]
         old_office = [elem['office']\
             for elem in person.rooms_occupied if 'office' in elem]
         result1 = dojo.print_room(old_office[0])
@@ -224,7 +224,7 @@ class TestSpaceAllocator(unittest.TestCase):
 
         self.dojo.load_people("resources/people.txt")
         last_person = self.dojo.find_person(7)
-        self.assertIn(last_person, self.dojo.all_people)
+        self.assertIn(last_person, self.dojo.people)
 
     def test_if_person_exists_in_target_room_after_reallocation(self):
         """Tests that person exists after reallocation"""
@@ -232,7 +232,7 @@ class TestSpaceAllocator(unittest.TestCase):
         self.dojo.create_room("office", "orange")
         self.dojo.create_room("living_space", "lion")
         self.dojo.add_person("John", "Ashaba", "Fellow", "Y")
-        person = self.dojo.all_people[0]
+        person = self.dojo.people[0]
         old_office = [elem['office']\
             for elem in person.rooms_occupied if 'office' in elem]
         old_living_space = [
@@ -262,4 +262,4 @@ class TestSpaceAllocator(unittest.TestCase):
         dojo2 = Dojo()
         dojo2.load_state("resources/testdb.db")
         room = dojo2.find_room("orange")
-        self.assertIn(room, dojo2.all_rooms)
+        self.assertIn(room, dojo2.rooms)

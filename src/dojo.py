@@ -8,8 +8,8 @@ Example:
         dojo = Dojo()
 
 Attributes:
-    all_rooms (Room[]): Contains a list of all rooms in the dojo
-    all_people (Person[]) Contains a list of all people in the system
+    rooms (Room[]): Contains a list of all rooms in the dojo
+    people (Person[]) Contains a list of all people in the system
 """
 
 import sqlite3
@@ -27,8 +27,8 @@ class Dojo(object):
     """
 
     def __init__(self):
-        self.all_rooms = []
-        self.all_people = []
+        self.rooms = []
+        self.people = []
 
     def create_room(self, room_type, *room_names):
         """ Used to create new rooms.
@@ -47,14 +47,14 @@ class Dojo(object):
 
         for room_name in room_names:
             # Check if room_name exists in the already created rooms
-            if room_name not in [room.room_name for room in self.all_rooms]:
+            if room_name not in [room.room_name for room in self.rooms]:
                 # Check that room_name contains only alphabetic characters
                 if not room_name.isalpha():
                     print("room name input must be string alphabet type")
                     return
                 room = Office(
                     room_name) if room_type.lower() == "office" else LivingSpace(room_name)
-                self.all_rooms.append(room)
+                self.rooms.append(room)
                 created_rooms.append(room)
                 print(
                     colorful.green(
@@ -88,7 +88,7 @@ class Dojo(object):
 
         rooms = []
 
-        person_id = len(self.all_people) + 1 # Generate person_id
+        person_id = len(self.people) + 1 # Generate person_id
         if not first_name.isalpha() or not last_name.isalpha():
             print(colorful.orange("Name should only contain alphabetic characters.\
                 Please rectify and try again"))
@@ -99,10 +99,10 @@ class Dojo(object):
         print(colorful.green(
             "{0} {1} {2} has been successfully added"
             .format(person_type, first_name, last_name)))
-        self.all_people.append(person)
+        self.people.append(person)
         # Assign office to person
         office_rooms = \
-            [room for room in self.all_rooms if room.room_type.lower() == "office"\
+            [room for room in self.rooms if room.room_type.lower() == "office"\
                 and not room.fully_occupied]
         # chosen_room = random.choice(office_rooms)
         if office_rooms:
@@ -126,7 +126,7 @@ class Dojo(object):
         # Assign person living_space
         if wants_accommodation is "Y" and person_type.lower() == "fellow":
             accommodation_rooms = [
-                room for room in self.all_rooms if room.room_type is "living_space"]
+                room for room in self.rooms if room.room_type is "living_space"]
             for living_room in accommodation_rooms:
                 if not living_room.fully_occupied:
                     living_room.add_person_to_room(person)
@@ -149,7 +149,7 @@ class Dojo(object):
     def print_room(self, room_name):
         """Prints all the people in a room """
 
-        if room_name in [room.room_name for room in self.all_rooms]:
+        if room_name in [room.room_name for room in self.rooms]:
             output = "\n".join(self.find_room(room_name).get_people_in_room())
             print(
                 colorful.blue(
@@ -173,7 +173,7 @@ class Dojo(object):
         if print_table is "N":
             rooms_people = []
             printed_output = ""
-            for room in self.all_rooms:
+            for room in self.rooms:
                 people = [(person.get_fullname()).upper()
                           for person in room.residents]
                 rooms_people.append({room.room_name: people})
@@ -192,7 +192,7 @@ class Dojo(object):
             return rooms_people
         else:
             allocated_people = \
-                [person for person in self.all_people if person.rooms_occupied]
+                [person for person in self.people if person.rooms_occupied]
             if allocated_people:
                 table = PrettyTable(['Name', 'Type', 'Office', 'Living Space'])
                 for person in allocated_people:
@@ -215,7 +215,7 @@ class Dojo(object):
 
         unallocated_people = []
         unallocated_table = PrettyTable(['Name', 'Person id', 'Missing'])
-        for person in self.all_people:
+        for person in self.people:
             if person.wants_accommodation is "N":
                 if not person.has_office:
                     unallocated_people.append(
@@ -244,12 +244,12 @@ class Dojo(object):
     def find_room(self, room_name):
         """Takes in the room name and returns the room"""
 
-        return [room for room in self.all_rooms if room_name == room.room_name][0]
+        return [room for room in self.rooms if room_name == room.room_name][0]
 
     def find_person(self, person_id):
         """Takes in the person_id and returns the person"""
 
-        return [person for person in self.all_people if person_id ==
+        return [person for person in self.people if person_id ==
                 person.person_id][0]
 
     def load_people(self, file):
@@ -274,7 +274,7 @@ class Dojo(object):
     def reallocate_person(self, person_id, new_room_name):
         """Reallocates person from one room to another"""
 
-        if person_id in [person.person_id for person in self.all_people]:
+        if person_id in [person.person_id for person in self.people]:
             person = self.find_person(person_id)
             new_room = self.find_room(new_room_name)
             if not new_room.fully_occupied:
@@ -376,7 +376,7 @@ class Dojo(object):
 
         # Save room data
         room_data = []
-        for room in self.all_rooms:
+        for room in self.rooms:
             room_data.append(
                 (room.room_name, room.room_type, room.fully_occupied))
         cursor.executemany("INSERT INTO room VALUES (?,?,?)", room_data)
@@ -389,7 +389,7 @@ class Dojo(object):
 
         # Save person data
         person_data = []
-        for person in self.all_people:
+        for person in self.people:
             person_data.append(
                 (person.person_id,
                  person.first_name,
@@ -408,7 +408,7 @@ class Dojo(object):
 
         # Save room_person data
         room_person_data = []
-        for person in self.all_people:
+        for person in self.people:
             for room_occupied in range(0, len(person.rooms_occupied)):
                 if "office" in person.rooms_occupied[room_occupied]:
                     room_person_data.append(
@@ -465,7 +465,7 @@ class Dojo(object):
                         person_id,
                         has_living_space,
                         has_office)
-                self.all_people.append(loaded_person)
+                self.people.append(loaded_person)
         except BaseException:
             print(colorful.red(
                 "The application has failed to load person data, \
