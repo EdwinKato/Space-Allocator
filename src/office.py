@@ -3,6 +3,7 @@
 """
 from .room import Room
 
+
 class Office(Room):
     """Office
     Office inherits from the Room class

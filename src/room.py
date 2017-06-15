@@ -14,6 +14,7 @@ Attributes:
 
 from abc import ABCMeta, abstractmethod
 
+
 class Room(metaclass=ABCMeta):
     """ This class is responsible for managing the people in a room """
 
@@ -22,37 +23,6 @@ class Room(metaclass=ABCMeta):
         self.name = name
         self._type = None
         self.fully_occupied = None
-
-    def get_residents(self):
-        """ Get people in room
-
-        Returns:
-            Array of names of the people in the room
-
-        """
-
-        people = []
-        for person in self.residents:
-            people.append(person.get_fullname())
-        return people
-
-    def remove_person(self, person):
-        """Removes a person from a room
-
-        Args:
-            person (Person): Person to be removed from the room
-
-        Returns:
-            True if successful, False otherwise.
-        """
-
-        if person in self.residents:
-            self.residents.remove(person)
-            if self.fully_occupied:
-                self.fully_occupied = None
-            return True
-        else:
-            return False
 
     @abstractmethod
     def set_type(self):

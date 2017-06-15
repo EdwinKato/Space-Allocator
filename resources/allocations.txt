@@ -1,8 +1,8 @@
 Room: testoffice 
- ------------------------------------- 
+ ------
 DELE ALI
 
 Room: testlivingspace 
- ------------------------------------- 
+ ------
 DELE ALI
 
